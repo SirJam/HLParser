@@ -1,0 +1,14 @@
+main
+{       
+	bool lol;
+	lol = TRUE;
+	if (5 > 3)
+	{
+		if (6 == 5)
+		{
+			lol = FALSE;
+		}
+		write(lol);
+	}
+	return 0;
+}
