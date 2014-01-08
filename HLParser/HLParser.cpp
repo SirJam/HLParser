@@ -14,7 +14,7 @@ void dump_to_stdout(const char* pFilename)
 	if (loadOkay)
 	{
 		printf("\n%s:\n", pFilename);
-		dump_to_stdout(&doc); // defined later in the tutorial
+		//dump_to_stdout(&doc); // defined later in the tutorial
 	}
 	else
 	{
