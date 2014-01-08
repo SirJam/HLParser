@@ -4,12 +4,28 @@
 #include "stdafx.h"
 #include "Lexer.h"
 #include "GrammarInfoParser.h"
-#include "Parser.h"
+#include "Parser.h" 
+#include "tinyxml.h"
+
+void dump_to_stdout(const char* pFilename)
+{
+	TiXmlDocument doc(pFilename);
+	bool loadOkay = doc.LoadFile();
+	if (loadOkay)
+	{
+		printf("\n%s:\n", pFilename);
+		dump_to_stdout(&doc); // defined later in the tutorial
+	}
+	else
+	{
+		printf("Failed to load file \"%s\"\n", pFilename);
+	}
+}
 
 int main(int argc, char * argv[])
 {
 	char *inputFileName = "input.txt";
-
+	dump_to_stdout("HLGrammar.xml");
 	Parser parser;
 
 	Lexer lexer(inputFileName, *parser.m_symbolsTable);
