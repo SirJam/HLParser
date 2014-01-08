@@ -4,7 +4,6 @@
 #include "Production.h"
 #include "Action.h"
 #include "Token.h"
-#include "Variable.h"
 
 #include <vector>
 #include <string.h>
