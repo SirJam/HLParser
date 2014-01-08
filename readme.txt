@@ -1,1 +1,1 @@
-Превед, Медвед!
+п»їHello, my dear BEAR!
