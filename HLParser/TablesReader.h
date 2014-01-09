@@ -2,11 +2,8 @@
 #include "tinyxml.h"
 #include "Symbol.h"
 #include "Production.h"
-#include "Action.h";
+#include "Action.h"
 
-#include <fstream>
-#include <iostream>
-#include <string>
 #include <vector>
 
 using namespace std;
@@ -15,7 +12,6 @@ class TablesReader
 {
 private:
 	void dump_to_stdout(TiXmlNode* pParent, unsigned int indent = 0);
-	ofstream outfile;
 
 	int m_lalrStateIndex;
 	int m_currentProduction;
