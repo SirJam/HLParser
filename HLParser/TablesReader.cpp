@@ -10,7 +10,6 @@ TablesReader::TablesReader()
 
 	m_lalrStateIndex = 0;
 	m_currentProduction = 0;
-	outfile.open("Out.txt");
 	dump_to_stdout("HLGrammar.xml");
 }
 
@@ -226,5 +225,4 @@ void TablesReader::dump_to_stdout(const char* pFilename)
 
 TablesReader::~TablesReader()
 {
-	outfile.close();
 }
