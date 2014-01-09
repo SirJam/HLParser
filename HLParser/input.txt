@@ -1,6 +1,7 @@
 main
 {       
-	int a;
+	bool lol, lol1;
+	int[5] bc;
     int b;
     a = 6;
     b = 9;

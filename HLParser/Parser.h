@@ -4,6 +4,7 @@
 #include "Production.h"
 #include "Action.h"
 #include "Token.h"
+#include "VariablesTable.h"
 
 #include <vector>
 #include <string.h>
@@ -29,6 +30,8 @@ private:
 	vector<int> m_states;
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
+
+	VariablesTable *m_variablesTable;
 
 	void processProduction(Production *production);
 	void Shift(Action action, Token token);

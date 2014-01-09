@@ -3,6 +3,7 @@
 #include "Symbol.h"
 #include "ErrorHandler.h"
 #include "TablesReader.h"
+#include "RuleName.h"
 
 Parser::Parser()
 {
@@ -14,6 +15,7 @@ Parser::Parser()
 	
 	tablesReader->~TablesReader();
 
+	m_variablesTable = new VariablesTable();
 	m_states.push_back(0);
 	m_tokens.push_back(createTokenEOF());
 }
@@ -85,11 +87,12 @@ void Parser::Shift(Action action, Token token)
 void Parser::computeProduction(Production *production) 
 {
 	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
-	if (symbol.name == "identifiers_definition")
+	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
-		Token *token = &m_tokens.back();
-		cout << token->symbol.name << endl;
-	}	
+		//m_variablesTable->TryToRegisterVariable(m_tokens);
+		//Token *token = &m_tokens.back();
+		//cout << token->symbol.name << endl;
+	}
 }
 
 bool Parser::Reduce(Action action)
