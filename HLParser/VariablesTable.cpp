@@ -14,7 +14,20 @@ VariablesTable::~VariablesTable()
 bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 {
 	Token typeToken = stack.at(stack.size() - 3);
-	string type = typeToken.formingTokens.front().formingTokens.front().value;
+	string type;
+	int factor = 1;
+
+	if (stack.at(stack.size() - 3).formingTokens.back().symbol.name == "primitive_type")
+	{
+		typeToken = stack.at(stack.size() - 3);
+		type = typeToken.formingTokens.front().formingTokens.front().value;
+	}
+	else
+	{
+		typeToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens.back();
+		type = typeToken.formingTokens.front().value;
+		factor = stoi(stack.at(stack.size() - 3).formingTokens.back().formingTokens[1].formingTokens.back().formingTokens.back().value);
+	}
 
 	Token *identifiersDefinition = &stack.at(stack.size() - 2);
 	while (identifiersDefinition) {
@@ -56,7 +69,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		//variable.count = count;
 		variable.m_name = idToken->value; 
 		variable.m_type = type;
-		variable.m_size = SizeManager::SizeOfType(variable.m_type);
+		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
 
 		m_variablesTable.push_back(variable);
 		//lastVariableCount++;
