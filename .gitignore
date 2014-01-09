@@ -3,3 +3,11 @@
 *.lastbuildstate
 *.idb
 *.opensdf
+*.exe
+*.ilk
+*.pdb
+*.txt
+*.suo
+*.obj
+*.log
+*.pch

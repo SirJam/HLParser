@@ -30,8 +30,11 @@ private:
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
 
+	void processProduction(Production *production);
 	void Shift(Action action, Token token);
 	bool Reduce(Action action);
+	void computeProduction(Production *production);
+
 	void Accept();
 	void HandleError(Token token);
 
