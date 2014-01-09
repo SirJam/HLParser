@@ -1,6 +1,5 @@
 main
 {       
-	bool lol, lol1;
 	int[5] bc;
     int b;
     a = 6;
