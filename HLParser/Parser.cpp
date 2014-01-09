@@ -89,7 +89,7 @@ void Parser::computeProduction(Production *production)
 	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
-		//m_variablesTable->TryToRegisterVariable(m_tokens);
+		m_variablesTable->TryToRegisterVariable(m_tokens);
 		//Token *token = &m_tokens.back();
 		//cout << token->symbol.name << endl;
 	}

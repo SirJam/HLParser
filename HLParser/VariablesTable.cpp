@@ -27,8 +27,8 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		}
 		else
 		{
-			idToken = &varDeclId->formingTokens.end()[-1];
-			count = stoi(varDeclId->formingTokens.end()[-3].value);
+			idToken = &varDeclId->formingTokens.at(varDeclId->formingTokens.size() - 1);
+	//		count = stoi(varDeclId->formingTokens.end()[-3].value);
 		}
 
 		/*if (m_variablesTable.size()) { // Checking variable redecleration in same scope
