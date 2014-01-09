@@ -4,6 +4,9 @@
 #include "Production.h"
 #include "Action.h"
 #include "Token.h"
+#include "Generator.h"
+#include "RuleName.h"
+#include "VariablesTable.h"
 
 #include <vector>
 #include <string.h>
@@ -14,7 +17,7 @@ using namespace std;
 class Parser
 {
 public:
-	Parser();
+	Parser(Generator *generator);	
 
 	void getNextToken(Token const& token);
 	Token createTokenEOF();
@@ -25,7 +28,6 @@ public:
 
 	int lastAction;
 private:
-
 	vector<int> m_states;
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
@@ -34,9 +36,12 @@ private:
 	void Shift(Action action, Token token);
 	bool Reduce(Action action);
 	void computeProduction(Production *production);
+	
 
 	void Accept();
 	void HandleError(Token token);
 
 	Symbol symbolWithIndex(int index);
+	VariablesTable *m_variablesTable;
+	Generator *generator;
 };

@@ -19,7 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -85,6 +85,7 @@
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
+    <ClInclude Include="RuleName.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Symbol.h" />
@@ -94,6 +95,8 @@
     <ClInclude Include="tinyxml.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenRecognizer.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="VariablesTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrorHandler.cpp" />
@@ -113,6 +116,7 @@
     <ClCompile Include="tinyxmlparser.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TokenRecognizer.cpp" />
+    <ClCompile Include="VariablesTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="GoldGrammarTables.xml" />

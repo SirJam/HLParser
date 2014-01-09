@@ -4,7 +4,8 @@
 #include "ErrorHandler.h"
 #include "TablesReader.h"
 
-Parser::Parser()
+Parser::Parser(Generator *generator)
+:generator(generator)
 {
 	TablesReader *tablesReader = new TablesReader();
 
@@ -85,12 +86,128 @@ void Parser::Shift(Action action, Token token)
 void Parser::computeProduction(Production *production) 
 {
 	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
-	if (symbol.name == "identifiers_definition")
+
+	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
-		Token *token = &m_tokens.back();
-		cout << token->symbol.name << endl;
+		//m_variablesTable->TryToRegisterVariable(m_tokens);
+		//Token *token = &m_tokens.back();
+		//cout << token->symbol.name << endl;
+	}
+
+	if (symbol.name == "identifier_list")
+	{
+		cout << "create var" << endl;
+	}
+	else if (symbol.name == "identifiers_definition")
+	{
+		cout << "setMemory";
+	}
+	else if (symbol.name == "expression_3")
+	{
+		Token *addopToken = &m_tokens.end()[-2];
+		Token *firstOperand = &m_tokens.end()[-3];
+		Token *secondOperand = &m_tokens.end()[-1];			
+		// Checking operand types
+
+		string operation = addopToken->value;
+			
+		if (operation == ">") 
+		{
+			cout << ">" << endl;
+		}
+		else if (operation == "<")
+		{
+			cout << "<" << endl;
+		}
+		else if (operation == ">=")
+		{
+			cout << ">=" << endl;
+		}
+		else if (operation == "<=")
+		{
+			cout << "<=" << endl;
+		}
+	}
+	else if (symbol.name == "expression_4") // + -
+	{
+		if (production->handles.size() == 3) 
+		{			
+			Token *addopToken = &m_tokens.end()[-2];
+			Token *firstOperand = &m_tokens.end()[-3];
+			Token *secondOperand = &m_tokens.end()[-1];			
+			// Checking operand types
+
+			string operation = addopToken->value;
+			
+			if (operation == "+") 
+			{
+				cout << "+" << endl;
+				//generator->createAddOperation();
+			}
+			else if (operation == "-")
+			{
+				cout << "-" << endl;
+				//generator->createSubstractOperation();
+			}
+		}
 	}	
+	else if (symbol.name == "expression_5") 
+	{
+		Token *addopToken = &m_tokens.end()[-2];
+		Token *firstOperand = &m_tokens.end()[-3];
+		Token *secondOperand = &m_tokens.end()[-1];			
+		// Checking operand types
+
+		string operation = addopToken->value;
+			
+		if (operation == "*") 
+		{
+			cout << "*" << endl;
+			//generator->createMultiplyOperation();
+		}
+		else if (operation == "/")
+		{
+			cout << "/" << endl;
+			//generator->createDivideOperation();
+		}
+	}
+	else if (symbol.name == "Goal") // programm end
+	{
+		//clear stack
+		generator->createProgramEnd();
+	}
+	else if (symbol.name == "statement") // programm end
+	{		
+		if (m_tokens.end()[-5].symbol.name == "write")
+		{
+			cout << "write" << endl;
+		}
+		if (m_tokens.end()[-5].symbol.name == "read")
+		{
+			cout << "read" << endl;
+		}
+		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-2].symbol.name != "]")
+		{
+			cout << "=" << endl;
+		}
+		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-2].symbol.name == "]")
+		{
+			cout << "]=" << endl;
+		}
+		if (m_tokens.end()[-7].symbol.name == "while")
+		{
+			cout << "while" << endl;
+		}		
+	}
+	else if (symbol.name == "if_construction") {
+		cout << "if_end" << endl;
+	}
+	else if (symbol.name == "else_construction") {
+		cout << "else_construction" << endl;
+	}
 }
+
+
 
 bool Parser::Reduce(Action action)
 {
