@@ -32,6 +32,8 @@ private:
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
 
+	VariablesTable *m_variablesTable;
+
 	void processProduction(Production *production);
 	void Shift(Action action, Token token);
 	bool Reduce(Action action);
@@ -42,6 +44,5 @@ private:
 	void HandleError(Token token);
 
 	Symbol symbolWithIndex(int index);
-	VariablesTable *m_variablesTable;
 	Generator *generator;
 };

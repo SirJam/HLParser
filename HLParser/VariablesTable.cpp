@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "VariablesTable.h"
+#include "SizeManager.h"
 
 
 VariablesTable::VariablesTable()
@@ -15,7 +16,8 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	Token typeToken = stack.at(stack.size() - 3);
 	string type = typeToken.formingTokens.front().formingTokens.front().value;
 
-	Token *varDeclList = &stack.at(stack.size() - 2);
+
+	/*Token *varDeclList = &stack.at(stack.size() - 2);
 	while (varDeclList) {
 		Variable variable;
 		Token *idToken = NULL;
@@ -28,7 +30,31 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		else
 		{
 			idToken = &varDeclId->formingTokens.end()[-1];
-			count = stoi(varDeclId->formingTokens.end()[-3].value);
+			count = stoi(varDeclId->formingTokens.end()[-3].value);*/
+
+	Token *identifiersDefinition = &stack.at(stack.size() - 2);
+	while (identifiersDefinition) {
+		Token *idToken = NULL;
+		Token *identifierDefinition;
+		Variable variable;
+		int count = 1;
+
+		if (identifiersDefinition->formingTokens.size())
+		{
+			identifierDefinition = &identifiersDefinition->formingTokens[0];
+		}
+		else
+		{
+			identifierDefinition = identifiersDefinition;
+		}
+		if (identifierDefinition->formingTokens.size() == 0) {
+			idToken = identifierDefinition;
+		}
+		else
+		{
+			idToken = &identifierDefinition->formingTokens.at(identifierDefinition->formingTokens.size() - 1);
+	//		count = stoi(varDeclId->formingTokens.end()[-3].value);
+
 		}
 
 		/*if (m_variablesTable.size()) { // Checking variable redecleration in same scope
@@ -49,14 +75,23 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		variable.m_type = type;
 		//variable.m_type = stringAsType(type);
 
+		variable.m_size = SizeManager::SizeOfType(variable.m_type);
+
 		m_variablesTable.push_back(variable);
 		//lastVariableCount++;
 
-		if (varDeclList->formingTokens.size() == 3) {
+
+		/*if (varDeclList->formingTokens.size() == 3) {
 			varDeclList = &varDeclList->formingTokens.back();
 		}
 		else {
-			varDeclList = NULL;
+			varDeclList = NULL;*/
+
+		if (identifiersDefinition->formingTokens.size() == 3) {
+			identifiersDefinition = &identifiersDefinition->formingTokens.back();
+		}
+		else {
+			identifiersDefinition = NULL;
 		}
 	}
 	

@@ -33,9 +33,16 @@
     <ClInclude Include="tinyxml.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenRecognizer.h" />
+<<<<<<< HEAD
     <ClInclude Include="RuleName.h" />
     <ClInclude Include="Variable.h" />
     <ClInclude Include="VariablesTable.h" />
+=======
+    <ClInclude Include="VariablesTable.h" />
+    <ClInclude Include="RuleName.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="SizeManager.h" />
+>>>>>>> dfd6e19b7fa954f80088209a4803c946ee0ecc83
   </ItemGroup>
   <ItemGroup>
     <Xml Include="GoldGrammarTables.xml" />

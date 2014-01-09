@@ -1,8 +1,8 @@
 main
 {       
-	int a, b;
-    bool c;
-    int g = 10;
+	bool lol, lol1;
+	int[5] bc;
+    int b;
     a = 6;
     a = a + 3 - 8;
     write(a);

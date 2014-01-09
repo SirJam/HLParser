@@ -100,7 +100,7 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == "identifiers_definition")
 	{
-		cout << "setMemory";
+		cout << "setMemory" << endl;;
 	}
 	else if (symbol.name == "expression_3")
 	{
