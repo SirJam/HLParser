@@ -1,0 +1,8 @@
+main
+{       
+    int b;
+    int c;
+    b = c + 9;
+    
+    return b;
+}

@@ -4,6 +4,7 @@
 #include "TypeChecker.h"
 #include "ErrorHandler.h"
 #include "RuleName.h"
+#include "ReservedWords.h"
 
 VariablesTable::VariablesTable()
 {
@@ -62,6 +63,11 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 			idToken = &identifierDefinition->formingTokens.at(identifierDefinition->formingTokens.size() - 1);
 		}
 
+		if (ReservedWords::IsReservedWord(idToken->value))
+		{
+			ErrorHandler::FailedWithReservedWord(idToken->value, idToken->lineNumber);
+		}
+
 		if (m_variablesTable->size()) 
 		{
 			for (Variable var : *m_variablesTable)
@@ -90,4 +96,27 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	}
 	
 	return true;
+}
+
+void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElementOfArray)
+{
+	int index = isNotElementOfArray ? 4 : 7;
+	Token idToken = stack.at(stack.size() - index);
+	Token expressionAndSymbolToken = stack.at(stack.size() - 2);
+	bool isVarExist = false;
+
+	for (Variable var : *m_variablesTable)
+	{
+		if (var.m_name == idToken.symbol.name)
+		{
+			isVarExist = true;
+			break;
+		}
+	}
+
+	if (!isVarExist) ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.name, idToken.lineNumber);
+
+	if (expressionAndSymbolToken.value != RuleName::EXPRESSION_AND_SYMBOL()) {
+
+	}
 }

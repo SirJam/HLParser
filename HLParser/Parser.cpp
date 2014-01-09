@@ -96,16 +96,8 @@ void Parser::computeProduction(Production *production)
 		//cout << token->symbol.name << endl;
 	}
 
-	if (symbol.name == "identifier_list")
-	{
-		cout << "create var" << endl;
-		//generator->addVariable();
-	}	
-	else if (token->symbol.name == "number") //обращение к переменной
-	{
-		cout << "number_call" << endl;
-	}
-	else if (symbol.name == "definition")
+	else if (symbol.name == "identifiers_definition")
+
 	{
 		cout << "setMemory" << endl;
 		int size = 0;
