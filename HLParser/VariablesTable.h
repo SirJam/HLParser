@@ -14,7 +14,7 @@ public:
 	~VariablesTable();
 
 	bool TryToRegisterVariable(vector<Token> stack);
-	void CheckExistingOfVariable(vector<Token> stack);
+	void CheckExistingOfVariable(vector<Token> stack, bool isNotElementOfArray);
 
 	vector<Variable> *m_variablesTable;
 };

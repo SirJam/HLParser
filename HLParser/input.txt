@@ -2,7 +2,7 @@ main
 {       
     int a,b;
     int[3] c;
-    a = 6;
+    f = 6;
     b = 9 + 6;
     a = b;
     c[2] = b;

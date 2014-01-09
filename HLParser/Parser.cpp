@@ -175,10 +175,13 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == "statement") // programm end
 	{		
-		if (m_tokens.at(m_tokens.size() - 5).symbol.name == RuleName::IDENTIFIER() ||
-			m_tokens.at(m_tokens.size() - 7).symbol.name == RuleName::IDENTIFIER())
+		if (m_tokens.at(m_tokens.size() - 4).symbol.name == RuleName::IDENTIFIER())
 		{
-			m_variablesTable->CheckExistingOfVariable(m_tokens);
+			m_variablesTable->CheckExistingOfVariable(m_tokens, true);
+		}
+		if (m_tokens.at(m_tokens.size() - 7).symbol.name == RuleName::IDENTIFIER())
+		{
+			m_variablesTable->CheckExistingOfVariable(m_tokens, false);
 		}
 		if (m_tokens.end()[-5].symbol.name == "write")
 		{

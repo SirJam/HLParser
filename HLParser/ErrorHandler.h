@@ -28,6 +28,12 @@ public:
 		cout << "Name " << name << " is not allowed because it is reserved word!" << endl;
 		exit(EXIT_FAILURE);
 	}
+	static void FailedWithNotExistingVariable(string name, int line)
+	{
+		cout << ErrorAtLine(line);
+		cout << "Variable " << name << " has not been declared!" << endl;
+		exit(EXIT_FAILURE);
+	}
 
 
 	static const string ErrorAtLine(int line)

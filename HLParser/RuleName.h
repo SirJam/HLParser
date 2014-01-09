@@ -18,6 +18,14 @@ public:
 	{
 		return "identifier";
 	}
+
+
+	static const string EXPRESSION_AND_SYMBOL()
+	{
+		return "expression_and_symbol";
+	}
+
+
 	static const string PRIMITIVE_TYPE()
 	{
 		return "primitive_type";

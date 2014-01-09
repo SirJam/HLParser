@@ -98,8 +98,25 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	return true;
 }
 
-void VariablesTable::CheckExistingOfVariable(vector<Token> stack)
+void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElementOfArray)
 {
-	Token idToken = stack.at(stack.size() - 3);
-	//Token 
+	int index = isNotElementOfArray ? 4 : 7;
+	Token idToken = stack.at(stack.size() - index);
+	Token expressionAndSymbolToken = stack.at(stack.size() - 2);
+	bool isVarExist = false;
+
+	for (Variable var : *m_variablesTable)
+	{
+		if (var.m_name == idToken.symbol.name)
+		{
+			isVarExist = true;
+			break;
+		}
+	}
+
+	if (!isVarExist) ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.name, idToken.lineNumber);
+
+	if (expressionAndSymbolToken.value != RuleName::EXPRESSION_AND_SYMBOL()) {
+
+	}
 }
