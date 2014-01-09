@@ -15,20 +15,20 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	Token typeToken = stack.at(stack.size() - 3);
 	string type = typeToken.formingTokens.front().formingTokens.front().value;
 
-	Token *varDeclList = &stack.at(stack.size() - 2);
-	while (varDeclList) {
+	Token *identifiersDefinition = &stack.at(stack.size() - 2);
+	while (identifiersDefinition) {
 		Token *idToken = NULL;
 		Token *varDeclId;
 		Variable variable;
 		int count = 1;
 
-		if (varDeclList->formingTokens.size())
+		if (identifiersDefinition->formingTokens.size())
 		{
-			varDeclId = &varDeclList->formingTokens[0];
+			varDeclId = &identifiersDefinition->formingTokens[0];
 		}
 		else
 		{
-			varDeclId = varDeclList;
+			varDeclId = identifiersDefinition;
 		}
 		if (varDeclId->formingTokens.size() == 0) {
 			idToken = varDeclId;
@@ -59,11 +59,11 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		m_variablesTable.push_back(variable);
 		//lastVariableCount++;
 
-		if (varDeclList->formingTokens.size() == 3) {
-			varDeclList = &varDeclList->formingTokens.back();
+		if (identifiersDefinition->formingTokens.size() == 3) {
+			identifiersDefinition = &identifiersDefinition->formingTokens.back();
 		}
 		else {
-			varDeclList = NULL;
+			identifiersDefinition = NULL;
 		}
 	}
 	
