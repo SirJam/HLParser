@@ -1,0 +1,6 @@
+DATA SECTION
+
+CODE SECTION
+START:
+mov edx 4
+RET

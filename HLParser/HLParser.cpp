@@ -4,12 +4,14 @@
 #include "stdafx.h"
 #include "Lexer.h"
 #include "Parser.h" 
+#include "Generator.h"
 
 int main(int argc, char * argv[])
 {
 	char *inputFileName = "input.txt";
 
-	Parser parser;
+	Generator generator;
+	Parser parser(&generator);	
 
 	Lexer lexer(inputFileName, *parser.m_symbolsTable);
 	while (lexer.nextTokenExists()) {
@@ -27,6 +29,18 @@ int main(int argc, char * argv[])
 	while (parser.lastAction != 4) {
 		parser.getNextToken(lastToken);
 	}
+
+	/*generator.createASMFile("input.asm");
+	ostringstream paramStream;
+	paramStream << "GoAsm.exe ";
+	paramStream << "input.asm";
+	system(paramStream.str().c_str());
+	
+	ostringstream paramStream1;
+	paramStream1 << "GoLink.exe /console ";
+	paramStream1 << "input.obj";
+	paramStream1 << " kernel32.dll";
+	system(paramStream1.str().c_str());*/
 
 	return 0;
 }

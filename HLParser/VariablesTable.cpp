@@ -50,7 +50,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		else
 		{
 			idToken = &identifierDefinition->formingTokens.at(identifierDefinition->formingTokens.size() - 1);
-	//		count = stoi(varDeclId->formingTokens.end()[-3].value);
+
 		}
 
 		if (m_variablesTable.size()) 
@@ -64,13 +64,11 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 			}
 		}
 
-		//variable.count = count;
 		variable.m_name = idToken->value; 
 		variable.m_type = type;
 		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
 
 		m_variablesTable.push_back(variable);
-		//lastVariableCount++;
 
 		if (identifiersDefinition->formingTokens.size() == 3) {
 			identifiersDefinition = &identifiersDefinition->formingTokens.back();
