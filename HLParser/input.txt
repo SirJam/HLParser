@@ -1,9 +1,8 @@
 main
 {       
-    int a,b;
-    int[3] c;
-    f = 6;
-    b = 9 + 6;
+    int b;
+    int c;
+    b = c + 6;
     a = b;
     c[2] = b;
     
