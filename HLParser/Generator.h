@@ -22,6 +22,10 @@ public:
 	void createSubstractOperation();
 	void createMultiplyOperation();
 	void createDivideOperation();
+
+	void addClearBuffer();
+
+	void createPrintInteger(bool const addNewLine);
 		
 private:
 	ostringstream programStream;

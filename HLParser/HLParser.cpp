@@ -30,13 +30,13 @@ int main(int argc, char * argv[])
 		parser.getNextToken(lastToken);
 	}
 
-	/*generator.createASMFile("input.asm");
+	generator.createASMFile("input.asm");
 	ostringstream paramStream;
 	paramStream << "GoAsm.exe ";
 	paramStream << "input.asm";
 	system(paramStream.str().c_str());
 	
-	ostringstream paramStream1;
+	/*ostringstream paramStream1;
 	paramStream1 << "GoLink.exe /console ";
 	paramStream1 << "input.obj";
 	paramStream1 << " kernel32.dll";

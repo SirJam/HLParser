@@ -89,7 +89,7 @@ void Parser::computeProduction(Production *production)
 
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
-		m_variablesTable->TryToRegisterVariable(m_tokens);
+		//m_variablesTable->TryToRegisterVariable(m_tokens);
 		//Token *token = &m_tokens.back();
 		//cout << token->symbol.name << endl;
 	}
@@ -181,6 +181,7 @@ void Parser::computeProduction(Production *production)
 		if (m_tokens.end()[-5].symbol.name == "write")
 		{
 			cout << "write" << endl;
+			generator->createPrintInteger(false);
 		}
 		if (m_tokens.end()[-5].symbol.name == "read")
 		{

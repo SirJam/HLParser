@@ -1,24 +1,5 @@
 main
 {       
-	int[5] bc;
-    int b;
-    a = 6;
-    a = a + 3 - 8;
-    write(a);
-    if (b == 4)
-    {
-        b = 8;
-    }
-    else
-    {
-        while (a == 0)
-        {
-            a = a + 9;
-        }
-    }
-    while (a > b)
-    {
-        a = a + 0;
-    }
-    return a;
+	write(3);
+    return 4;
 }
