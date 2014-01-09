@@ -15,6 +15,8 @@ Parser::Parser(Generator *generator)
 	
 	tablesReader->~TablesReader();
 
+	m_variablesTable = new VariablesTable();
+
 	m_states.push_back(0);
 	m_tokens.push_back(createTokenEOF());
 }

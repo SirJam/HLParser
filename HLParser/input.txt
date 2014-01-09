@@ -1,5 +1,6 @@
 main
 {       
-	write(3);
-    return 4;
+    int b;
+    b = 0;
+    return b;
 }
