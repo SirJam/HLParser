@@ -87,6 +87,7 @@
     <ClInclude Include="Production.h" />
     <ClInclude Include="RuleName.h" />
     <ClInclude Include="Scanner.h" />
+    <ClInclude Include="SizeManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="TablesReader.h" />

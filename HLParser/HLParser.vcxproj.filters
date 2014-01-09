@@ -36,6 +36,7 @@
     <ClInclude Include="VariablesTable.h" />
     <ClInclude Include="RuleName.h" />
     <ClInclude Include="Variable.h" />
+    <ClInclude Include="SizeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="GoldGrammarTables.xml" />

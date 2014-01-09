@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "VariablesTable.h"
+#include "SizeManager.h"
 
 
 VariablesTable::VariablesTable()
@@ -18,24 +19,24 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	Token *identifiersDefinition = &stack.at(stack.size() - 2);
 	while (identifiersDefinition) {
 		Token *idToken = NULL;
-		Token *varDeclId;
+		Token *identifierDefinition;
 		Variable variable;
 		int count = 1;
 
 		if (identifiersDefinition->formingTokens.size())
 		{
-			varDeclId = &identifiersDefinition->formingTokens[0];
+			identifierDefinition = &identifiersDefinition->formingTokens[0];
 		}
 		else
 		{
-			varDeclId = identifiersDefinition;
+			identifierDefinition = identifiersDefinition;
 		}
-		if (varDeclId->formingTokens.size() == 0) {
-			idToken = varDeclId;
+		if (identifierDefinition->formingTokens.size() == 0) {
+			idToken = identifierDefinition;
 		}
 		else
 		{
-			idToken = &varDeclId->formingTokens.at(varDeclId->formingTokens.size() - 1);
+			idToken = &identifierDefinition->formingTokens.at(identifierDefinition->formingTokens.size() - 1);
 	//		count = stoi(varDeclId->formingTokens.end()[-3].value);
 		}
 
@@ -55,6 +56,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		//variable.count = count;
 		variable.m_name = idToken->value; 
 		variable.m_type = type;
+		variable.m_size = SizeManager::SizeOfType(variable.m_type);
 
 		m_variablesTable.push_back(variable);
 		//lastVariableCount++;
