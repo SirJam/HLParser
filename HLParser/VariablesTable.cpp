@@ -17,11 +17,19 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 
 	Token *varDeclList = &stack.at(stack.size() - 2);
 	while (varDeclList) {
-		Variable variable;
 		Token *idToken = NULL;
+		Token *varDeclId;
+		Variable variable;
 		int count = 1;
 
-		Token *varDeclId = &varDeclList->formingTokens[0];
+		if (varDeclList->formingTokens.size())
+		{
+			varDeclId = &varDeclList->formingTokens[0];
+		}
+		else
+		{
+			varDeclId = varDeclList;
+		}
 		if (varDeclId->formingTokens.size() == 0) {
 			idToken = varDeclId;
 		}
@@ -47,7 +55,6 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		//variable.count = count;
 		variable.m_name = idToken->value; 
 		variable.m_type = type;
-		//variable.m_type = stringAsType(type);
 
 		m_variablesTable.push_back(variable);
 		//lastVariableCount++;
