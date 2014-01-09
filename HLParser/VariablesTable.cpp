@@ -53,18 +53,16 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	//		count = stoi(varDeclId->formingTokens.end()[-3].value);
 		}
 
-		/*if (m_variablesTable.size()) { // Checking variable redecleration in same scope
-			for (int i = m_variablesTable.size() - 1; i >= (int) m_variablesTable.size() - lastVariableCount; i--) {
-				if (i < 0) {
-					break;
-				}
-				Variable *declaredVariable = &m_variablesTable[i];
-				if (declaredVariable->m_name == idToken->value) {
+		if (m_variablesTable.size()) 
+		{ // Checking variable redecleration in same scope
+			for (Variable var : m_variablesTable)
+			{
+				if (var.m_name == idToken->value)
+				{
 					exit(EXIT_FAILURE);
-					//ErrorHandler::failWithErrorCode(304, idToken->value, idToken->lineNumber);
 				}
 			}
-		}*/
+		}
 
 		//variable.count = count;
 		variable.m_name = idToken->value; 
