@@ -81,13 +81,13 @@
   <ItemGroup>
     <ClInclude Include="Action.h" />
     <ClInclude Include="ErrorHandler.h" />
-    <ClInclude Include="GrammarInfoParser.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Symbol.h" />
+    <ClInclude Include="TablesReader.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tinystr.h" />
     <ClInclude Include="tinyxml.h" />
@@ -96,7 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrorHandler.cpp" />
-    <ClCompile Include="GrammarInfoParser.cpp" />
     <ClCompile Include="HLParser.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -105,6 +104,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TablesReader.cpp" />
     <ClCompile Include="tinystr.cpp" />
     <ClCompile Include="tinyxml.cpp" />
     <ClCompile Include="tinyxmlerror.cpp" />

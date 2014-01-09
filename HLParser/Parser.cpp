@@ -2,15 +2,17 @@
 #include "Parser.h"
 #include "Symbol.h"
 #include "ErrorHandler.h"
-#include "GrammarInfoParser.h"
+#include "TablesReader.h"
 
 Parser::Parser()
 {
-	GrammarInfoParser *grammarParser = new GrammarInfoParser("HLGramar.ini");
+	TablesReader *tablesReader = new TablesReader();
 
-	m_symbolsTable = grammarParser->readSymbolTable();
-	m_productionsTable = grammarParser->readProductionTable();
-	m_actionsTable = grammarParser->readActionTable();
+	m_symbolsTable = tablesReader->GetSymbolsTable();
+	m_productionsTable = tablesReader->GetProductionsTable();
+	m_actionsTable = tablesReader->GetActionsTable();
+	
+	tablesReader->~TablesReader();
 
 	m_states.push_back(0);
 	m_tokens.push_back(createTokenEOF());
@@ -25,7 +27,7 @@ Token Parser::createTokenEOF()
 
 	int lineNumber = m_tokens.size() ? m_tokens.back().lineNumber : 0;
 
-	return Token(symbol, lineNumber);
+	return Token(symbol, "EOF", lineNumber);
 }
 
 Symbol Parser::symbolWithIndex(int index)
@@ -69,14 +71,18 @@ void Parser::Shift(Action action, Token token)
 
 bool Parser::Reduce(Action action)
 {
-	for (vector<Production>::iterator it2 = m_productionsTable->begin(); it2 != m_productionsTable->end(); it2++) {
+	for (vector<Production>::iterator it2 = m_productionsTable->begin(); it2 != m_productionsTable->end(); it2++) 
+	{
 		Production *production = &(*it2);
-		if (production->index == action.target) {
+		if (production->index == action.target) 
+		{
 			// Removing right part of the production from stack
 			vector<Token> formingTokens;
-			for (vector<int>::reverse_iterator rit = production->handles.rbegin(); rit != production->handles.rend(); rit++) {
+			for (vector<int>::reverse_iterator rit = production->handles.rbegin(); rit != production->handles.rend(); rit++) 
+			{
 				int symbolIndex = (*rit);
-				if (symbolIndex == m_tokens.back().symbol.index) {
+				if (symbolIndex == m_tokens.back().symbol.index) 
+				{
 					formingTokens.push_back(m_tokens.back());
 					m_tokens.pop_back();
 					m_states.pop_back();
@@ -86,23 +92,24 @@ bool Parser::Reduce(Action action)
 			Symbol symbolNonTerminal = symbolWithIndex(production->nonTerminalIndex);
 
 			int lineNum = 0;
-			for (vector<Token>::iterator it3 = formingTokens.begin(); it3 != formingTokens.end(); it3++) {
+			for (vector<Token>::iterator it3 = formingTokens.begin(); it3 != formingTokens.end(); it3++) 
+			{
 				int tokenLineNumber = it3->lineNumber;
-				if (tokenLineNumber) {
+				if (tokenLineNumber) 
+				{
 					lineNum = tokenLineNumber;
 				}
 			}
 
-			symbolNonTerminal.name = "nonTerminal";
-			Token nonTerminalToken(symbolNonTerminal, lineNum);
+			Token nonTerminalToken(symbolNonTerminal, "nonTerminal", lineNum);
 			nonTerminalToken.formingTokens = formingTokens;
 			m_tokens.push_back(nonTerminalToken);
 			// Finding next state
-			for (vector<Action>::iterator it4 = m_actionsTable->begin(); it4 != m_actionsTable->end(); it4++) {
+			for (vector<Action>::iterator it4 = m_actionsTable->begin(); it4 != m_actionsTable->end(); it4++) 
+			{
 				Action *currentAction = &(*it4);
-				if (currentAction->stateIndex == m_states.back()
-					&& currentAction->symbolIndex == m_tokens.back().symbol.index
-					&& currentAction->type == 3) {
+				if (currentAction->stateIndex == m_states.back() && currentAction->symbolIndex == m_tokens.back().symbol.index && currentAction->type == 3) 
+				{
 					m_states.push_back(currentAction->target);
 					break;
 				}

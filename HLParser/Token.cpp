@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 #include "Token.h"
 
-Token::Token(Symbol tokenType, int const lineNumber)
+Token::Token(Symbol tokenType, string const& value, int const lineNumber)
 :symbol(tokenType), 
-value(tokenType.name),
+value(value),
 lineNumber(lineNumber) 
 {
 }
