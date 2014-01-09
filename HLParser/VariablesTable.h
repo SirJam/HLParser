@@ -15,6 +15,6 @@ public:
 
 	bool TryToRegisterVariable(vector<Token> stack);
 
-	vector<Variable> m_variablesTable;
+	vector<Variable> *m_variablesTable;
 };
 

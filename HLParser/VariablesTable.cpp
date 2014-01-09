@@ -5,6 +5,7 @@
 
 VariablesTable::VariablesTable()
 {
+	m_variablesTable = new vector<Variable>;
 }
 
 VariablesTable::~VariablesTable()
@@ -50,15 +51,15 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		else
 		{
 			idToken = &identifierDefinition->formingTokens.at(identifierDefinition->formingTokens.size() - 1);
-
 		}
 
-		if (m_variablesTable.size()) 
+		if (m_variablesTable->size()) 
 		{ // Checking variable redecleration in same scope
-			for (Variable var : m_variablesTable)
+			for (Variable var : *m_variablesTable)
 			{
 				if (var.m_name == idToken->value)
 				{
+					cout << "REDEFINITION!" << endl;
 					exit(EXIT_FAILURE);
 				}
 			}
@@ -68,7 +69,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		variable.m_type = type;
 		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
 
-		m_variablesTable.push_back(variable);
+		m_variablesTable->push_back(variable);
 
 		if (identifiersDefinition->formingTokens.size() == 3) {
 			identifiersDefinition = &identifiersDefinition->formingTokens.back();

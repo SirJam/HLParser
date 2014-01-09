@@ -1,24 +1,29 @@
 main
 {       
+	bool lol, lol1;
+	bool lol;
 	int[5] bc;
     int b;
     a = 6;
-    a = a + 3 - 8;
-    write(a);
-    if (b == 4)
+    b = 9;
+    if (a > b) 
     {
-        b = 8;
-    }
-    else
-    {
-        while (a == 0)
+        a = b + 5 * 8 / 5 - 7;
+        if (b == a) 
         {
-            a = a + 9;
+            if (a < b) 
+            {
+                b = 4;
+            }
+            else
+            {
+                b = 0;
+            }
         }
     }
-    while (a > b)
+    else 
     {
-        a = a + 0;
+        b = a + 6;
     }
-    return a;
+    return b;
 }
