@@ -77,7 +77,7 @@ void Parser::Shift(Action action, Token token)
 			m_tokens.end()[-3].symbol.name == "(" &&
 			m_tokens.end()[-4].symbol.name == "if") {
 			string falseLabel;
-			cout << "generate <if_start>" << endl;
+			cout << "if_start" << endl;
 			//generator->createIfExpressionStartPart(falseLabel);
 			//createdIfExpressionsLabels.push_back(falseLabel);
 			//cout << ("PUSH LABEL " + falseLabel + "\n");
@@ -89,20 +89,35 @@ void Parser::computeProduction(Production *production)
 {
 	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
 
+	Token *token = &m_tokens.back();
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
-		//m_variablesTable->TryToRegisterVariable(m_tokens);
-		//Token *token = &m_tokens.back();
+		m_variablesTable->TryToRegisterVariable(m_tokens);		
 		//cout << token->symbol.name << endl;
 	}
 
 	if (symbol.name == "identifier_list")
 	{
 		cout << "create var" << endl;
-	}
-	else if (symbol.name == "identifiers_definition")
+		//generator->addVariable();
+	}	
+	else if (token->symbol.name == "number") //обращение к переменной
 	{
-		cout << "setMemory" << endl;;
+		cout << "number_call" << endl;
+	}
+	else if (symbol.name == "definition")
+	{
+		cout << "setMemory" << endl;
+		int size = 0;
+		if (m_variablesTable->m_variablesTable ->size()) 
+		{
+			for (Variable var : *m_variablesTable->m_variablesTable )
+			{
+				size = size + var.m_size;
+			}
+		}		
+		generator->createVariableSpace(size); //allocate space
+		//cout << size << endl;
 	}
 	else if (symbol.name == "expression_3")
 	{
@@ -180,10 +195,18 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == "statement") // programm end
 	{		
+		if (m_tokens.at(m_tokens.size() - 4).symbol.name == RuleName::IDENTIFIER())
+		{
+			m_variablesTable->CheckExistingOfVariable(m_tokens, true);
+		}
+		if (m_tokens.at(m_tokens.size() - 7).symbol.name == RuleName::IDENTIFIER())
+		{
+			m_variablesTable->CheckExistingOfVariable(m_tokens, false);
+		}
 		if (m_tokens.end()[-5].symbol.name == "write")
 		{
 			cout << "write" << endl;
-			generator->createPrintInteger(false);
+			//generator->createPrintInteger(false);
 		}
 		if (m_tokens.end()[-5].symbol.name == "read")
 		{

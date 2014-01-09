@@ -13,6 +13,6 @@ public:
 	string m_name;
 	string m_type;
 	string m_value;
-	string m_size;
+	int m_size;
 };
 

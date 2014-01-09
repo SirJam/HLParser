@@ -16,16 +16,24 @@ public:
 	void createProgramStart();	
 	void createProgramEnd();
 
-	void createVariable(string name, int const value, bool const isArray, int const arrSize);
-
+	
 	void createAddOperation();	
 	void createSubstractOperation();
 	void createMultiplyOperation();
 	void createDivideOperation();
 
-	void addClearBuffer();
+	void createVariableSpace(int const space);
 
-	void createPrintInteger(bool const addNewLine);
+	void createIntVariable(int const offset, bool const isInArray, int const typeSize);
+	void createIntConstant(int num);
+
+	void addReadVariable(int const offset, bool const isInArray, int const typeSize);
+
+	//void createIntConstant(int num);
+
+	//void addClearBuffer();
+
+	//void createPrintInteger(bool const addNewLine);
 		
 private:
 	ostringstream programStream;

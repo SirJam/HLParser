@@ -45,23 +45,6 @@ void Generator::createProgramEnd()
 	programStream << stream.str();
 }
 
-void Generator::createVariable(string name, int const value, bool const isArray = false, int const arrSize = 0)
-{
-	ostringstream stream;
-
-	stream << name << "dw";
-	if (isArray)
-	{
-		stream << arrSize << "dup (" << value << ")\n";
-	}
-	else 
-	{
-		stream << value << ")\n\n";
-	}
-
-	programStream << stream.str();
-}
-
 void Generator::createAddOperation()
 {
 	ostringstream stream;
@@ -112,7 +95,27 @@ void Generator::createDivideOperation()
 	programStream << stream.str();
 }
 
-void Generator::addClearBuffer()
+/*void Generator::createIntConstant(int num)
+{
+	ostringstream stream;
+
+	stream << "PUSH " << num << "\n";
+
+	programStream << stream.str();
+}*/
+
+/*void Generator::createIntVariable(int const offset, bool const isInArray, int const typeSize)
+{
+	addReadVariable(offset, isInArray, typeSize);
+
+	ostringstream stream;
+
+	stream << "PUSH EAX\n";
+
+	programStream << stream.str();
+}*/
+
+/*void Generator::addClearBuffer()
 {
 	ostringstream streamOfProcedures;
 
@@ -151,7 +154,7 @@ void Generator::createPrintInteger(bool const addNewLine)
 
 	stream << "MOV EBX, EAX\n";
 
-	stream << "PUSH CONSOLE_OUT_HANDLE_CODE\n";
+	//stream << "PUSH CONSOLE_OUT_HANDLE_CODE\n";
 	stream << "CALL GetStdHandle\n";
 
 	stream << "PUSH 0\n";
@@ -170,6 +173,56 @@ void Generator::createPrintInteger(bool const addNewLine)
 
 	stream << "PUSH EAX\n";
 	stream << "CALL WriteFile\n";
+
+	programStream << stream.str();
+}*/
+
+void Generator::createVariableSpace(int const space)
+{
+	ostringstream stream;
+
+	stream << "SUB ESP, " << space << "\n\n";
+
+	programStream << stream.str();
+}
+
+void Generator::createIntVariable(int const offset, bool const isInArray, int const typeSize)
+{
+	addReadVariable(offset, isInArray, typeSize);
+
+	ostringstream stream;
+
+	stream << "PUSH EAX\n";
+
+	programStream << stream.str();
+}
+
+void Generator::addReadVariable(int const offset, bool const isInArray, int const typeSize)
+{
+	ostringstream stream;
+
+	if (isInArray) {
+		stream << "POP EDX\n";
+		stream << "MOV EAX, " << typeSize << "\n";
+		stream << "IMUL EAX, EDX\n";
+
+		stream << "MOV EDX, " << offset << "\n";
+		stream << "SUB EDX, EAX\n";
+		stream << "NEG EDX\n";
+		stream << "MOV EAX, [EBP + EDX]\n";
+	}
+	else {
+		stream << "MOV EAX, [EBP - " << offset << "]\n";
+	}
+
+	programStream << stream.str(); 
+}
+
+void Generator::createIntConstant(int num)
+{
+	ostringstream stream;
+
+	stream << "PUSH " << num << "\n";
 
 	programStream << stream.str();
 }
