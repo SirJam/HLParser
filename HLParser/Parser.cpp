@@ -38,7 +38,8 @@ Symbol Parser::symbolWithIndex(int index)
 }
 
 void Parser::getNextToken(Token const& token)
-{
+{	
+	//printState(token);
 	for (vector<Action>::iterator it = m_actionsTable->begin(); it != m_actionsTable->end(); it++) {
 		Action *action = &(*it);
 		if (action->stateIndex == m_states.back() && action->symbolIndex == token.symbol.index) {
@@ -57,32 +58,52 @@ void Parser::getNextToken(Token const& token)
 				}
 			}
 		}
-	}
+	}	
 
 	HandleError(token);
 }
 
 void Parser::Shift(Action action, Token token)
-{
+{	
 	m_tokens.push_back(token);
 	m_states.push_back(action.target);
-	lastAction = 1;
+	lastAction = 1;	
+
+	if (m_tokens.back().symbol.name == ")") {
+		if (m_tokens.end()[-2].symbol.name == "expression_0" &&
+			m_tokens.end()[-3].symbol.name == "(" &&
+			m_tokens.end()[-4].symbol.name == "if") {
+			string falseLabel;
+			cout << "generate <if_start>" << endl;
+			//generator->createIfExpressionStartPart(falseLabel);
+			//createdIfExpressionsLabels.push_back(falseLabel);
+			//cout << ("PUSH LABEL " + falseLabel + "\n");
+		}
+	}
+}
+
+void Parser::computeProduction(Production *production) 
+{
+	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
+	if (symbol.name == "identifiers_definition")
+	{
+		Token *token = &m_tokens.back();
+		cout << token->symbol.name << endl;
+	}	
 }
 
 bool Parser::Reduce(Action action)
 {
-	for (vector<Production>::iterator it2 = m_productionsTable->begin(); it2 != m_productionsTable->end(); it2++) 
-	{
-		Production *production = &(*it2);
-		if (production->index == action.target) 
-		{
+	for (vector<Production>::iterator it2 = m_productionsTable->begin(); it2 != m_productionsTable->end(); it2++) {
+		Production *production = &(*it2);		
+		if (production->index == action.target) {	
+			//realize production
+			computeProduction(production);
 			// Removing right part of the production from stack
 			vector<Token> formingTokens;
-			for (vector<int>::reverse_iterator rit = production->handles.rbegin(); rit != production->handles.rend(); rit++) 
-			{
-				int symbolIndex = (*rit);
-				if (symbolIndex == m_tokens.back().symbol.index) 
-				{
+			for (vector<int>::reverse_iterator rit = production->handles.rbegin(); rit != production->handles.rend(); rit++) {
+				int symbolIndex = (*rit);				
+				if (symbolIndex == m_tokens.back().symbol.index) {
 					formingTokens.push_back(m_tokens.back());
 					m_tokens.pop_back();
 					m_states.pop_back();

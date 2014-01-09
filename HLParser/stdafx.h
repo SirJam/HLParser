@@ -9,7 +9,20 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <string>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+
+using std::string;
+using std::cerr;
+using std::cout;
+using std::vector;
+using std::map;
+using std::stoi;
+
+//extern int const stringLength;
 
 
 
-// TODO: reference additional headers your program requires here
