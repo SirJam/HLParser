@@ -95,11 +95,6 @@ void Parser::computeProduction(Production *production)
 		//Token *token = &m_tokens.back();
 		//cout << token->symbol.name << endl;
 	}
-
-	if (symbol.name == "identifier_list")
-	{
-		cout << "create var" << endl;
-	}
 	else if (symbol.name == "identifiers_definition")
 	{
 		cout << "setMemory" << endl;;
@@ -180,6 +175,11 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == "statement") // programm end
 	{		
+		if (m_tokens.at(m_tokens.size() - 5).symbol.name == RuleName::IDENTIFIER() ||
+			m_tokens.at(m_tokens.size() - 7).symbol.name == RuleName::IDENTIFIER())
+		{
+			m_variablesTable->CheckExistingOfVariable(m_tokens);
+		}
 		if (m_tokens.end()[-5].symbol.name == "write")
 		{
 			cout << "write" << endl;

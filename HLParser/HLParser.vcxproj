@@ -85,6 +85,7 @@
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
+    <ClInclude Include="ReservedWords.h" />
     <ClInclude Include="RuleName.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="SizeManager.h" />

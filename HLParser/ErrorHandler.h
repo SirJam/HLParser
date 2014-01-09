@@ -22,6 +22,12 @@ public:
 		cout << "Redefinition of variable " << variableName << "!" << endl;
 		exit(EXIT_FAILURE);
 	}
+	static void FailedWithReservedWord(string name, int line)
+	{
+		cout << ErrorAtLine(line);
+		cout << "Name " << name << " is not allowed because it is reserved word!" << endl;
+		exit(EXIT_FAILURE);
+	}
 
 
 	static const string ErrorAtLine(int line)

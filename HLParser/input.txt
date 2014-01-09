@@ -1,8 +1,13 @@
 main
 {       
     int a,b;
+    int[3] c;
     a = 6;
-    b = 9;
+    b = 9 + 6;
+    a = b;
+    c[2] = b;
+    
+
     if (a > b) 
     {
         a = b + 5 * 8 / 5 - 7;
