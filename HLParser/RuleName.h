@@ -10,4 +10,8 @@ public:
 	{
 		  return "identifier_definition";
 	}
+	static const string PRIMITIVE_TYPE()
+	{
+		return "primitive_type";
+	}
 };

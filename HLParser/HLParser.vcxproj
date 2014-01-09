@@ -96,6 +96,7 @@
     <ClInclude Include="tinyxml.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenRecognizer.h" />
+    <ClInclude Include="TypeChecker.h" />
     <ClInclude Include="Variable.h" />
     <ClInclude Include="VariablesTable.h" />
   </ItemGroup>
