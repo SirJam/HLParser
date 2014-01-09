@@ -12,14 +12,7 @@ public:
 
 	static int SizeOfType(string type)
 	{
-		if (type == "char" || type == "int" || type == "bool")
-		{
-			return sizeof(int);
-		}
-		else
-		{
-			return 4;
-		}
+		return sizeof(int);
 	}
 };
 

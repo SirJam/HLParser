@@ -1,6 +1,0 @@
-main
-{       
-    int b;
-    b = 0;
-    return b;
-}
