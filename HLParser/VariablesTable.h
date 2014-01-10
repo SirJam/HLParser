@@ -9,6 +9,10 @@ using namespace std;
 
 class VariablesTable
 {
+private:
+	Token *GetLastVariable(Token *token);
+	void GetBodyWithoutTail(Token & token);
+	Token *m_tempToken;
 public:
 	VariablesTable();
 	~VariablesTable();
