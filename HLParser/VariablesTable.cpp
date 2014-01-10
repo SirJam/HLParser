@@ -107,7 +107,7 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 
 	for (Variable var : *m_variablesTable)
 	{
-		if (var.m_name == idToken.symbol.name)
+		if (var.m_name == idToken.name)
 		{
 			isVarExist = true;
 			break;

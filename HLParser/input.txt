@@ -1,8 +1,10 @@
 main
-{       
-    int b;
-    int c;
-    b = c + 9;
+{
+    int[10] arr;
+	int a, b;
+    a = 0;
+    b = 0;
+    arr[1] = 9;
     
-    return b;
+    return 0;
 }
