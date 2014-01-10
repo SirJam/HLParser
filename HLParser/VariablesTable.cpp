@@ -107,7 +107,7 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 
 	for (Variable var : *m_variablesTable)
 	{
-		if (var.m_name == idToken.name)
+		if (var.m_name == idToken.value)
 		{
 			isVarExist = true;
 			break;
@@ -119,4 +119,21 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 	if (expressionAndSymbolToken.value != RuleName::EXPRESSION_AND_SYMBOL()) {
 
 	}
+}
+
+int VariablesTable::getOffset(string varName) 
+{	
+	int offset = 0;
+	if (m_variablesTable ->size()) 
+	{
+		for (Variable var : *m_variablesTable )
+		{			
+			if (var.m_name == varName)
+			{				
+				break;
+			}
+			offset = offset + var.m_size;
+		}
+	}	
+	return offset;
 }

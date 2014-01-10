@@ -88,16 +88,14 @@ void Parser::Shift(Action action, Token token)
 void Parser::computeProduction(Production *production) 
 {
 	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
-
+	
 	Token *token = &m_tokens.back();
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
 		m_variablesTable->TryToRegisterVariable(m_tokens);		
 		//cout << token->symbol.name << endl;
 	}
-
-	else if (symbol.name == "identifiers_definition")
-
+	else if (symbol.name == "definition")
 	{
 		cout << "setMemory" << endl;
 		int size = 0;
@@ -183,13 +181,21 @@ void Parser::computeProduction(Production *production)
 	else if (symbol.name == "Goal") // programm end
 	{
 		//clear stack
-		generator->createProgramEnd();
+		int size = 0;
+		if (m_variablesTable->m_variablesTable ->size()) 
+		{
+			for (Variable var : *m_variablesTable->m_variablesTable )
+			{
+				size = size + var.m_size;
+			}
+		}				
+		generator->createProgramEnd(size);
 	}
 	else if (symbol.name == "statement") // programm end
 	{		
 		if (m_tokens.at(m_tokens.size() - 4).symbol.name == RuleName::IDENTIFIER())
 		{
-			m_variablesTable->CheckExistingOfVariable(m_tokens, true);
+			m_variablesTable->CheckExistingOfVariable(m_tokens, true);			
 		}
 		if (m_tokens.at(m_tokens.size() - 7).symbol.name == RuleName::IDENTIFIER())
 		{
@@ -204,14 +210,15 @@ void Parser::computeProduction(Production *production)
 		{
 			cout << "read" << endl;
 		}
-		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-2].symbol.name != "]")
+		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name != "]")
 		{
-			cout << "=" << endl;
+			//cout << m_tokens.end()[-4].value << "=" << endl;
+			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
 		}
-		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-2].symbol.name == "]")
+		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")
 		{
-			cout << "]=" << endl;
-		}
+			cout << m_tokens.end()[-7].value << "[" << m_tokens.end()[-5].symbol.name << "]=" << endl;
+		}		
 		if (m_tokens.end()[-7].symbol.name == "while")
 		{
 			cout << "while" << endl;

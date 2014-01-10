@@ -14,7 +14,7 @@ public:
 	void createASMFile(string fileName);
 
 	void createProgramStart();	
-	void createProgramEnd();
+	void createProgramEnd(int const varSpace);
 
 	
 	void createAddOperation();	
@@ -27,7 +27,10 @@ public:
 	void createIntVariable(int const offset, bool const isInArray, int const typeSize);
 	void createIntConstant(int num);
 
+	void createAssignmentOperation(int const offset, bool const isInArray, int const typeSize);
+
 	void addReadVariable(int const offset, bool const isInArray, int const typeSize);
+	void addWriteVariable(int const offset, bool const isInArray, int const typeSize);
 
 	//void createIntConstant(int num);
 

@@ -15,6 +15,7 @@ public:
 
 	bool TryToRegisterVariable(vector<Token> stack);
 	void CheckExistingOfVariable(vector<Token> stack, bool isNotElementOfArray);
+	int getOffset(string varName);
 
 	vector<Variable> *m_variablesTable;
 };
