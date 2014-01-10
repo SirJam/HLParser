@@ -15,6 +15,30 @@ VariablesTable::~VariablesTable()
 {
 }
 
+Token *VariablesTable::GetLastVariable(Token *token)
+{
+	if (token->formingTokens.size())
+	{
+		token = GetLastVariable(&token->formingTokens[0]);	
+	}
+	else
+	{
+		return token;
+	}
+}
+
+void VariablesTable::GetBodyWithoutTail(Token & token)
+{
+	if (token.formingTokens.size() == 3)
+	{
+		GetBodyWithoutTail(token.formingTokens[0]);
+	}
+	else
+	{
+
+	}
+}
+
 bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 {
 	Token typeToken = stack.at(stack.size() - 3);
@@ -45,22 +69,14 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		Variable variable;
 		int count = 1;
 
-		if (identifiersDefinition->formingTokens.size())
+		identifierDefinition = &identifiersDefinition->formingTokens.back();
+		if (identifierDefinition->formingTokens.size() == 1) 
 		{
-			identifierDefinition = &identifiersDefinition->formingTokens[0];
+			idToken = &identifierDefinition->formingTokens.front();
 		}
-		else
-		{
-			identifierDefinition = identifiersDefinition;
-		}
-
-		if (identifierDefinition->formingTokens.size() == 0) 
+		else 
 		{
 			idToken = identifierDefinition;
-		}
-		else
-		{
-			idToken = &identifierDefinition->formingTokens.at(identifierDefinition->formingTokens.size() - 1);
 		}
 
 		if (ReservedWords::IsReservedWord(idToken->value))
@@ -87,7 +103,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 
 		if (identifiersDefinition->formingTokens.size() == 3) 
 		{
-			identifiersDefinition = &identifiersDefinition->formingTokens.back();
+			identifiersDefinition = &identifiersDefinition->formingTokens.front();
 		}
 		else 
 		{
@@ -107,7 +123,7 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 
 	for (Variable var : *m_variablesTable)
 	{
-		if (var.m_name == idToken.name)
+		if (var.m_name == idToken.value)
 		{
 			isVarExist = true;
 			break;
