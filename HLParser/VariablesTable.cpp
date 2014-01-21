@@ -5,6 +5,7 @@
 #include "ErrorHandler.h"
 #include "RuleName.h"
 #include "ReservedWords.h"
+#include <stack>
 
 VariablesTable::VariablesTable()
 {
@@ -152,4 +153,59 @@ int VariablesTable::getOffset(string varName)
 		}
 	}	
 	return offset;
+}
+
+vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
+{
+	Token *currToken = &stack.back();
+	std::stack<Token*> nextTokens;
+	vector<string> expressionStack;
+
+	do 
+	{
+		if (currToken->formingTokens.size() == 1)
+		{
+			currToken = &currToken->formingTokens.back();
+		}
+		else
+		{
+			if (currToken->formingTokens.size() == 3)
+			{
+				if (currToken->formingTokens.front().value == ")" && currToken->formingTokens.back().value == "(")
+				{
+					currToken = &currToken->formingTokens[1];
+				}
+				else
+				{
+					if (currToken->formingTokens.front().formingTokens.size() == 1)
+					{
+						expressionStack.push_back(currToken->formingTokens[1].value);
+						nextTokens.push(&currToken->formingTokens.back());
+						currToken = &currToken->formingTokens.front();
+					}
+					else if (currToken->formingTokens.front().formingTokens.size() == 3)
+					{
+						expressionStack.push_back(currToken->formingTokens[1].value);
+						nextTokens.push(&currToken->formingTokens.front());
+						currToken = &currToken->formingTokens.back();
+					}
+				}
+			}
+		}
+
+		if (currToken->formingTokens.size() == 0)
+		{
+			expressionStack.push_back(currToken->value);
+			if (nextTokens.size())
+			{
+				currToken = nextTokens.top();
+				nextTokens.pop();
+			}
+		}
+	} 
+	while (currToken->formingTokens.size());
+
+	reverse(expressionStack.begin(), expressionStack.end());
+
+	return expressionStack;
 }

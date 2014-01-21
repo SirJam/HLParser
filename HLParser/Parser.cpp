@@ -95,6 +95,11 @@ void Parser::computeProduction(Production *production)
 		m_variablesTable->TryToRegisterVariable(m_tokens);		
 		//cout << token->symbol.name << endl;
 	}
+	else if (symbol.name == "expression_and_symbol")
+	{
+		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens);
+		cout << "E" << endl;
+	}
 	else if (symbol.name == "definition")
 	{
 		cout << "setMemory" << endl;
