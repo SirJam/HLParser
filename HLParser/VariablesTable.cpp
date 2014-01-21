@@ -55,7 +55,14 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	{
 		typeToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens.back();
 		type = typeToken.formingTokens.front().value;
-		factor = stoi(stack.at(stack.size() - 3).formingTokens.back().formingTokens[1].formingTokens.back().formingTokens.back().value);
+		Token factorToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens[1];
+		if (factorToken.formingTokens.size() == 1) {
+			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value);
+		} 
+		else
+		{
+			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) + stoi(factorToken.formingTokens.front().formingTokens.back().value);
+		}
 	}
 
 	if (!TypeChecker::IsAllowedType(type))
@@ -194,7 +201,7 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 				{
 					currToken = &currToken->formingTokens[1];
 				}
-				if (currToken->formingTokens[1].value == ",")
+				if (currToken->formingTokens.size() > 1 && currToken->formingTokens[1].value == ",")
 				{
 					nextTokens.push(&currToken->formingTokens.back());
 					currToken = &currToken->formingTokens.front();
