@@ -1,7 +1,7 @@
 main
 {
 	int a;
-	int[5, 7] arr;
-	a = 5 + arr[0, arr[0]];
+	int[5, 5] arr;
+	a[0] = 5 + arr[4, arr[0,0]];
 	return 0;
 }
