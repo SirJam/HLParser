@@ -212,8 +212,8 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 					{
 						if (currToken->formingTokens.size() > 1) {
 							expressionStack.push_back(currToken->formingTokens[1].value);
+							nextTokens.push(&currToken->formingTokens.back());
 						}
-						nextTokens.push(&currToken->formingTokens.back());
 						currToken = &currToken->formingTokens.front();
 					}
 					else if (currToken->formingTokens.front().formingTokens.size() == 3)
