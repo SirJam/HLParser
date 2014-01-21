@@ -119,6 +119,9 @@ void Parser::computeProduction(Production *production)
 			}
 			else { //identifier
 				int offset = m_variablesTable->getOffset(stack[i]);
+				string type = m_variablesTable->getType(stack[i]);
+				generator->createIntVariable(offset, type);
+				cout << type << endl;
 			}
 		}
 		cout << "E" << endl;

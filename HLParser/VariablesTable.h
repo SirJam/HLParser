@@ -24,6 +24,7 @@ public:
 	static Token *GetRootToken(Token *token);
 
 	int getOffset(string varName);
+	string getType(string varName);	
 	vector<string> GetExpressionStack(vector<Token> stack);
 
 	vector<Variable> *m_variablesTable;

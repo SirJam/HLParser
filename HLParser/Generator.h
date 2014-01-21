@@ -24,19 +24,14 @@ public:
 
 	void createVariableSpace(int const space);
 
-	void createIntVariable(int const offset, bool const isInArray, int const typeSize);
+	void createIntVariable(int const offset, string const type);
 	void createIntConstant(int num);
 
 	void createAssignmentOperation(int const offset, bool const isInArray, int const typeSize);
 
-	void addReadVariable(int const offset, bool const isInArray, int const typeSize);
+	void addReadVariable(int const offset, string const varType);
 	void addWriteVariable(int const offset, bool const isInArray, int const typeSize);
 
-	//void createIntConstant(int num);
-
-	//void addClearBuffer();
-
-	//void createPrintInteger(bool const addNewLine);
 		
 private:
 	ostringstream programStream;
