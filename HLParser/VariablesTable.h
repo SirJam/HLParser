@@ -4,6 +4,7 @@
 #include <vector>
 #include "Variable.h"
 #include "Token.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -20,6 +21,7 @@ public:
 	bool TryToRegisterVariable(vector<Token> stack);
 	void CheckExistingOfVariable(vector<Token> stack, bool isNotElementOfArray);
 	int getOffset(string varName);
+	vector<string> GetExpressionStack(vector<Token> stack);
 
 	vector<Variable> *m_variablesTable;
 };

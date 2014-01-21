@@ -24,7 +24,14 @@ public:
 	{
 		return "expression_and_symbol";
 	}
-
+	static const string EXPRESSION_5()
+	{
+		return "expression_5";
+	}
+	static const string EXPRESSION_4()
+	{
+		return "expression_4";
+	}
 
 	static const string PRIMITIVE_TYPE()
 	{
