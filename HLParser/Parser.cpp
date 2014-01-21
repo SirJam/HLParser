@@ -154,12 +154,12 @@ void Parser::computeProduction(Production *production)
 			if (operation == "+") 
 			{
 				cout << "+" << endl;
-				//generator->createAddOperation();
+				generator->createAddOperation();
 			}
 			else if (operation == "-")
 			{
 				cout << "-" << endl;
-				//generator->createSubstractOperation();
+				generator->createSubstractOperation();
 			}
 		}
 	}	
