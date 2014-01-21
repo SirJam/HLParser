@@ -140,12 +140,14 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 int VariablesTable::getOffset(string varName) 
 {	
 	int offset = 0;
+	
 	if (m_variablesTable ->size()) 
 	{
 		for (Variable var : *m_variablesTable )
 		{			
 			if (var.m_name == varName)
-			{				
+			{			
+				offset += + var.m_size;
 				break;
 			}
 			offset = offset + var.m_size;

@@ -211,8 +211,7 @@ void Parser::computeProduction(Production *production)
 			cout << "read" << endl;
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name != "]")
-		{
-			//cout << m_tokens.end()[-4].value << "=" << endl;
+		{			
 			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")
