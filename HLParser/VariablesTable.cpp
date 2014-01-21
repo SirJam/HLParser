@@ -193,8 +193,8 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 				if (currToken->formingTokens.front().value == ")" && currToken->formingTokens.back().value == "(")
 				{
 					currToken = &currToken->formingTokens[1];
-				}
-				if (currToken->formingTokens[1].value == ",")
+				}				
+				if (currToken->formingTokens.size() > 1 && currToken->formingTokens[1].value == ",")
 				{
 					nextTokens.push(&currToken->formingTokens.back());
 					currToken = &currToken->formingTokens.front();

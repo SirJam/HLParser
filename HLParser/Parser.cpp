@@ -154,12 +154,12 @@ void Parser::computeProduction(Production *production)
 			if (operation == "+") 
 			{
 				cout << "+" << endl;
-				generator->createAddOperation();
+				//generator->createAddOperation();
 			}
 			else if (operation == "-")
 			{
 				cout << "-" << endl;
-				generator->createSubstractOperation();
+				//generator->createSubstractOperation();
 			}
 		}
 	}	
@@ -217,7 +217,7 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name != "]")
 		{			
-			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
+			//generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")
 		{

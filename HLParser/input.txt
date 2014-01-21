@@ -1,7 +1,7 @@
 main
 {
 	int a;
-	int[5, 5] arr;
-	a[0] = 5 + arr[4, arr[0,0]];
+    int b;
+	a = b * 8 + (5 - 8) / 9;
 	return 0;
 }
