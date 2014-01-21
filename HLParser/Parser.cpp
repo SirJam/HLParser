@@ -95,12 +95,12 @@ void Parser::computeProduction(Production *production)
 		m_variablesTable->TryToRegisterVariable(m_tokens);		
 		//cout << token->symbol.name << endl;
 	}
-	else if (symbol.name == "expression_and_symbol")
+	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens);
 		cout << "E" << endl;
 	}
-	else if (symbol.name == "definition")
+	else if (symbol.name == RuleName::DEFINITION())
 	{
 		cout << "setMemory" << endl;
 		int size = 0;
@@ -221,7 +221,7 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")
 		{
-			cout << m_tokens.end()[-7].value << "[" << m_tokens.end()[-5].symbol.name << "]=" << endl;
+			cout << m_tokens.end()[-7].value << "[" << VariablesTable::GetRootToken(&m_tokens.end()[-5])->value << "]=" << endl;
 		}		
 		if (m_tokens.end()[-7].symbol.name == "while")
 		{

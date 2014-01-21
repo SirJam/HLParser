@@ -18,6 +18,10 @@ public:
 	{
 		return "identifier";
 	}
+	static const string DEFINITION()
+	{
+		return "definition";
+	}
 
 
 	static const string EXPRESSION_AND_SYMBOL()

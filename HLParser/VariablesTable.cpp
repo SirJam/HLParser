@@ -238,3 +238,13 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 
 	return expressionStack;
 }
+
+Token *VariablesTable::GetRootToken(Token *token)
+{
+	while (token->formingTokens.size())
+	{
+		token = &token->formingTokens.back();
+	}
+
+	return token;
+}
