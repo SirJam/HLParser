@@ -169,11 +169,21 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 		}
 		else
 		{
+			if (currToken->formingTokens.size() == 4)
+			{
+				nextTokens.push(&currToken->formingTokens[1]);
+				currToken = &currToken->formingTokens.back();
+			}
 			if (currToken->formingTokens.size() == 3)
 			{
 				if (currToken->formingTokens.front().value == ")" && currToken->formingTokens.back().value == "(")
 				{
 					currToken = &currToken->formingTokens[1];
+				}
+				if (currToken->formingTokens[1].value == ",")
+				{
+					nextTokens.push(&currToken->formingTokens.back());
+					currToken = &currToken->formingTokens.front();
 				}
 				else
 				{
