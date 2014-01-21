@@ -93,7 +93,7 @@ void Parser::computeProduction(Production *production)
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
 		m_variablesTable->TryToRegisterVariable(m_tokens);		
-		//cout << token->symbol.name << endl;
+		cout << token->symbol.name << endl;
 	}
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
@@ -150,7 +150,7 @@ void Parser::computeProduction(Production *production)
 		}				
 		generator->createProgramEnd(size);
 	}
-	else if (symbol.name == "statement") // programm end
+	else if (symbol.name == RuleName::STATEMENT()) // programm end
 	{		
 		if (m_tokens.at(m_tokens.size() - 4).symbol.name == RuleName::IDENTIFIER())
 		{
@@ -160,12 +160,12 @@ void Parser::computeProduction(Production *production)
 		{
 			m_variablesTable->CheckExistingOfVariable(m_tokens, false);
 		}
-		if (m_tokens.end()[-5].symbol.name == "write")
+		if (m_tokens.end()[-5].symbol.name == RuleName::WRITE())
 		{
 			cout << "write" << endl;
 			//generator->createPrintInteger(false);
 		}
-		if (m_tokens.end()[-5].symbol.name == "read")
+		if (m_tokens.end()[-5].symbol.name == RuleName::READ())
 		{
 			cout << "read" << endl;
 		}

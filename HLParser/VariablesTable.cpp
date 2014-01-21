@@ -44,23 +44,29 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 {
 	Token typeToken = stack.at(stack.size() - 3);
 	string type;
+	string help_type;
 	int factor = 1;
 
 	if (stack.at(stack.size() - 3).formingTokens.back().symbol.name == RuleName::PRIMITIVE_TYPE())
 	{
 		typeToken = stack.at(stack.size() - 3);
 		type = typeToken.formingTokens.front().formingTokens.front().value;
+		help_type = type;
 	}
 	else
 	{
 		typeToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens.back();
 		type = typeToken.formingTokens.front().value;
+		help_type = type;
 		Token factorToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens[1];
-		if (factorToken.formingTokens.size() == 1) {
+		if (factorToken.formingTokens.size() == 1) 
+		{
+			help_type = type + "_array";
 			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value);
 		} 
 		else
 		{
+			help_type = type + "_double_array";
 			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) + stoi(factorToken.formingTokens.front().formingTokens.back().value);
 		}
 	}
@@ -104,7 +110,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		}
 
 		variable.m_name = idToken->value; 
-		variable.m_type = type;
+		variable.m_type = help_type;
 		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
 
 		m_variablesTable->push_back(variable);
