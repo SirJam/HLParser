@@ -98,6 +98,21 @@ void Parser::computeProduction(Production *production)
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens);
+		for (int i = 0; i < stack.size; i++)
+		{
+			if (stack[i] == "+") {
+				generator->createAddOperation();
+			}
+			else if (stack[i] == "-") {
+				generator->createSubstractOperation();
+			}
+			else if (stack[i] == "*") {
+				generator->createMultiplyOperation();
+			}
+			else if (stack[i] == "/") {
+				generator->createDivideOperation();
+			}
+		}
 		cout << "E" << endl;
 	}
 	else if (symbol.name == RuleName::DEFINITION())

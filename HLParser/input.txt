@@ -1,7 +1,7 @@
 main
 {
  	int a;
-    	int b;
+    int b;
  	a = b * 8 + (5 - 7) / 9;
  	return 0;
 }
