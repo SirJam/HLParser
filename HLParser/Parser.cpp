@@ -98,7 +98,7 @@ void Parser::computeProduction(Production *production)
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens);
-		for (int i = 0; i < stack.size; i++)
+		for (int i = 0; i < stack.size(); i++)
 		{
 			if (stack[i] == "+") {
 				generator->createAddOperation();
@@ -111,6 +111,14 @@ void Parser::computeProduction(Production *production)
 			}
 			else if (stack[i] == "/") {
 				generator->createDivideOperation();
+			}
+			else if (isdigit(stack[i][0])) {
+				generator->createIntConstant(atoi(stack[i].c_str()));
+			}
+			else if (stack[i] == ">") {
+			}
+			else { //identifier
+				int offset = m_variablesTable->getOffset(stack[i]);
 			}
 		}
 		cout << "E" << endl;
@@ -128,76 +136,7 @@ void Parser::computeProduction(Production *production)
 		}		
 		generator->createVariableSpace(size); //allocate space
 		//cout << size << endl;
-	}
-	else if (symbol.name == "expression_3")
-	{
-		Token *addopToken = &m_tokens.end()[-2];
-		Token *firstOperand = &m_tokens.end()[-3];
-		Token *secondOperand = &m_tokens.end()[-1];			
-		// Checking operand types
-
-		string operation = addopToken->value;
-			
-		if (operation == ">") 
-		{
-			cout << ">" << endl;
-		}
-		else if (operation == "<")
-		{
-			cout << "<" << endl;
-		}
-		else if (operation == ">=")
-		{
-			cout << ">=" << endl;
-		}
-		else if (operation == "<=")
-		{
-			cout << "<=" << endl;
-		}
-	}
-	else if (symbol.name == "expression_4") // + -
-	{
-		if (production->handles.size() == 3) 
-		{			
-			Token *addopToken = &m_tokens.end()[-2];
-			Token *firstOperand = &m_tokens.end()[-3];
-			Token *secondOperand = &m_tokens.end()[-1];			
-			// Checking operand types
-
-			string operation = addopToken->value;
-			
-			if (operation == "+") 
-			{
-				cout << "+" << endl;
-				//generator->createAddOperation();
-			}
-			else if (operation == "-")
-			{
-				cout << "-" << endl;
-				//generator->createSubstractOperation();
-			}
-		}
-	}	
-	else if (symbol.name == "expression_5") 
-	{
-		Token *addopToken = &m_tokens.end()[-2];
-		Token *firstOperand = &m_tokens.end()[-3];
-		Token *secondOperand = &m_tokens.end()[-1];			
-		// Checking operand types
-
-		string operation = addopToken->value;
-			
-		if (operation == "*") 
-		{
-			cout << "*" << endl;
-			//generator->createMultiplyOperation();
-		}
-		else if (operation == "/")
-		{
-			cout << "/" << endl;
-			//generator->createDivideOperation();
-		}
-	}
+	}		
 	else if (symbol.name == "Goal") // programm end
 	{
 		//clear stack
@@ -232,7 +171,7 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name != "]")
 		{			
-			//generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
+			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")
 		{

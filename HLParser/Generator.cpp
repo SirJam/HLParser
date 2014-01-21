@@ -79,7 +79,7 @@ void Generator::createMultiplyOperation()
 	stream << "POP EAX\n";
 	stream << "POP EDX\n";
 	stream << "IMUL EAX, EDX\n";
-	stream << "PUSH EAX\n";
+	stream << "PUSH EAX\n\n";
 
 	programStream << stream.str();
 }
@@ -93,7 +93,7 @@ void Generator::createDivideOperation()
 	stream << "POP EAX\n";
 	stream << "CDQ\n";
 	stream << "IDIV EBX\n";
-	stream << "PUSH EAX\n";
+	stream << "PUSH EAX\n\n";
 
 	programStream << stream.str();
 }
@@ -135,7 +135,7 @@ void Generator::createIntVariable(int const offset, bool const isInArray, int co
 
 	ostringstream stream;
 
-	stream << "PUSH EAX\n";
+	stream << "PUSH EAX\n\n";
 
 	programStream << stream.str();
 }
@@ -165,7 +165,7 @@ void Generator::createIntConstant(int num)
 {
 	ostringstream stream;
 
-	stream << "PUSH " << num << "\n";
+	stream << "PUSH " << num << "\n\n";
 
 	programStream << stream.str();
 }
