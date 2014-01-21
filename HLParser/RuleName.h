@@ -8,7 +8,7 @@ class RuleName
 public:
 	static const string IDENTIFIER_DEFINITION()
 	{
-		  return "identifier_definition";
+		return "identifier_definition";
 	}
 	static const string IDENTIFIER_HANDLER()
 	{
@@ -24,6 +24,20 @@ public:
 	}
 
 
+	static const string STATEMENT()
+	{
+		return "statement";
+	}
+	static const string WRITE()
+	{
+		return "write";
+	}
+	static const string READ()
+	{
+		return "read";
+	}
+
+
 	static const string EXPRESSION_AND_SYMBOL()
 	{
 		return "expression_and_symbol";
@@ -35,6 +49,10 @@ public:
 	static const string EXPRESSION_4()
 	{
 		return "expression_4";
+	}
+	static const string EXPRESSION_0()
+	{
+		return "expression_0";
 	}
 
 	static const string PRIMITIVE_TYPE()

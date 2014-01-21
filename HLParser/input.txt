@@ -1,7 +1,9 @@
 main
 {
  	int a;
-    	int b;
- 	a = b * 8 + (5 - 7) / 9;
+    	int[1] b;
+    	int[1,4] c;
+    	bool[1,4] d;
+ 	write(a);
  	return 0;
 }
