@@ -20,6 +20,7 @@ public:
 
 	bool TryToRegisterVariable(vector<Token> stack);
 	void CheckExistingOfVariable(vector<Token> stack, bool isNotElementOfArray);
+	bool DoesVariableExists(string variablesName);
 	int getOffset(string varName);
 	vector<string> GetExpressionStack(vector<Token> stack);
 

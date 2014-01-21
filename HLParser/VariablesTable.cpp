@@ -138,6 +138,18 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 	}
 }
 
+bool VariablesTable::DoesVariableExists(string variablesName)
+{
+	for (Variable variable : *m_variablesTable)
+	{
+		if (variable.m_name == variablesName)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 int VariablesTable::getOffset(string varName) 
 {	
 	int offset = 0;
@@ -207,12 +219,17 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 
 		if (currToken->formingTokens.size() == 0)
 		{
+			if (currToken->symbol.name == RuleName::IDENTIFIER() && !DoesVariableExists(currToken->value))
+			{
+				ErrorHandler::FailedWithNotExistingVariable(currToken->value, currToken->lineNumber);
+			}
 			expressionStack.push_back(currToken->value);
 			if (nextTokens.size())
 			{
 				currToken = nextTokens.top();
 				nextTokens.pop();
 			}
+
 		}
 	} 
 	while (currToken->formingTokens.size());

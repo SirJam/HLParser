@@ -1,6 +1,7 @@
 main
 {
 	int a;
-	a = 5 + arr[222];
+	int[5] arr;
+	a = 5 + arr[arr[0]];
 	return 0;
 }
