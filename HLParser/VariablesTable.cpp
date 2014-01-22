@@ -163,6 +163,24 @@ bool VariablesTable::DoesVariableExists(string variablesName)
 	return false;
 }
 
+string VariablesTable::getType(string varName)
+{
+	string type = "";
+	
+	if (m_variablesTable ->size()) 
+	{
+		for (Variable var : *m_variablesTable )
+		{			
+			if (var.m_name == varName)
+			{			
+				type += var.m_type;
+				break;
+			}
+		}
+	}	
+	return type;
+}
+
 int VariablesTable::getOffset(string varName) 
 {	
 	int offset = 0;

@@ -98,6 +98,32 @@ void Parser::computeProduction(Production *production)
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens);
+		for (int i = 0; i < stack.size(); i++)
+		{
+			if (stack[i] == "+") {
+				generator->createAddOperation();
+			}
+			else if (stack[i] == "-") {
+				generator->createSubstractOperation();
+			}
+			else if (stack[i] == "*") {
+				generator->createMultiplyOperation();
+			}
+			else if (stack[i] == "/") {
+				generator->createDivideOperation();
+			}
+			else if (isdigit(stack[i][0])) {
+				generator->createIntConstant(atoi(stack[i].c_str()));
+			}
+			else if (stack[i] == ">") {
+			}
+			else { //identifier
+				int offset = m_variablesTable->getOffset(stack[i]);
+				string type = m_variablesTable->getType(stack[i]);
+				generator->createIntVariable(offset, type);
+				cout << type << endl;
+			}
+		}
 		cout << "E" << endl;
 	}
 	else if (symbol.name == RuleName::DEFINITION())

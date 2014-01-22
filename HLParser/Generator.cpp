@@ -48,6 +48,13 @@ void Generator::createProgramEnd(int const varSpace)
 	programStream << stream.str();
 }
 
+void Generator::createVariableSpace(int const space)
+{
+	ostringstream stream;
+	stream << "SUB ESP, " << space << "\n\n";
+	programStream << stream.str();
+}
+
 void Generator::createAddOperation()
 {
 	ostringstream stream;
@@ -79,7 +86,7 @@ void Generator::createMultiplyOperation()
 	stream << "POP EAX\n";
 	stream << "POP EDX\n";
 	stream << "IMUL EAX, EDX\n";
-	stream << "PUSH EAX\n";
+	stream << "PUSH EAX\n\n";
 
 	programStream << stream.str();
 }
@@ -93,92 +100,55 @@ void Generator::createDivideOperation()
 	stream << "POP EAX\n";
 	stream << "CDQ\n";
 	stream << "IDIV EBX\n";
-	stream << "PUSH EAX\n";
+	stream << "PUSH EAX\n\n";
 
 	programStream << stream.str();
-}
-
-/*void Generator::createIntConstant(int num)
-{
-	ostringstream stream;
-
-	stream << "PUSH " << num << "\n";
-
-	programStream << stream.str();
-}*/
-
-/*void Generator::createIntVariable(int const offset, bool const isInArray, int const typeSize)
-{
-	addReadVariable(offset, isInArray, typeSize);
-
-	ostringstream stream;
-
-	stream << "PUSH EAX\n";
-
-	programStream << stream.str();
-}*/
-
-
-
-void Generator::createVariableSpace(int const space)
-{
-	ostringstream stream;
-
-	stream << "SUB ESP, " << space << "\n\n";
-
-	programStream << stream.str();
-}
-
-void Generator::createIntVariable(int const offset, bool const isInArray, int const typeSize)
-{
-	addReadVariable(offset, isInArray, typeSize);
-
-	ostringstream stream;
-
-	stream << "PUSH EAX\n";
-
-	programStream << stream.str();
-}
-
-void Generator::addReadVariable(int const offset, bool const isInArray, int const typeSize)
-{
-	ostringstream stream;
-
-	if (isInArray) {
-		stream << "POP EDX\n";
-		stream << "MOV EAX, " << typeSize << "\n";
-		stream << "IMUL EAX, EDX\n";
-
-		stream << "MOV EDX, " << offset << "\n";
-		stream << "SUB EDX, EAX\n";
-		stream << "NEG EDX\n";
-		stream << "MOV EAX, [EBP + EDX]\n";
-	}
-	else {
-		stream << "MOV EAX, [EBP - " << offset << "]\n";
-	}
-
-	programStream << stream.str(); 
 }
 
 void Generator::createIntConstant(int num)
 {
 	ostringstream stream;
+	stream << "PUSH " << num << "\n\n";
+	programStream << stream.str();
+}
 
-	stream << "PUSH " << num << "\n";
-
+void Generator::createIntVariable(int const offset, string const type)
+{
+	addReadVariable(offset, type);
+	ostringstream stream;
+	stream << "PUSH EAX\n\n";
 	programStream << stream.str();
 }
 
 void Generator::createAssignmentOperation(int const offset, bool const isInArray, int const typeSize)
 {
 	ostringstream stream;
-
 	stream << "POP EAX\n";
-
 	programStream << stream.str();
-
 	addWriteVariable(offset, isInArray, typeSize);
+}
+
+void Generator::addReadVariable(int const offset, string const type) //read value from stack to EAX
+{
+	ostringstream stream;
+
+	if (type == "int_array" || type == "bool_array") {
+		//stream << "POP EDX\n";
+		//stream << "MOV EAX, " << type << "\n";
+		//stream << "IMUL EAX, EDX\n";
+		//
+		//stream << "MOV EDX, " << offset << "\n";
+		//stream << "SUB EDX, EAX\n";
+		//stream << "NEG EDX\n";
+		//stream << "MOV EAX, [EBP + EDX]\n";
+	}
+	else if (type == "int_double_array" || type == "bool_double_array") {
+	}
+	else {
+		stream << "MOV EAX, [EBP - " << offset << "]\n";
+	}
+
+	programStream << stream.str(); 
 }
 
 void Generator::addWriteVariable(int const offset, bool const isInArray, int const typeSize)
