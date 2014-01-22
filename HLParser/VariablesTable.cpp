@@ -20,7 +20,7 @@ Token *VariablesTable::GetLastVariable(Token *token)
 {
 	if (token->formingTokens.size())
 	{
-		token = GetLastVariable(&token->formingTokens[0]);	
+		token = GetLastVariable(&token->formingTokens[0]);
 	}
 	else
 	{
@@ -59,11 +59,11 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		type = typeToken.formingTokens.front().value;
 		help_type = type;
 		Token factorToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens[1];
-		if (factorToken.formingTokens.size() == 1) 
+		if (factorToken.formingTokens.size() == 1)
 		{
 			help_type = type + "_array";
 			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value);
-		} 
+		}
 		else
 		{
 			help_type = type + "_double_array";
@@ -84,11 +84,11 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		int count = 1;
 
 		identifierDefinition = &identifiersDefinition->formingTokens.back();
-		if (identifierDefinition->formingTokens.size() == 1) 
+		if (identifierDefinition->formingTokens.size() == 1)
 		{
 			idToken = &identifierDefinition->formingTokens.front();
 		}
-		else 
+		else
 		{
 			idToken = identifierDefinition;
 		}
@@ -98,7 +98,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 			ErrorHandler::FailedWithReservedWord(idToken->value, idToken->lineNumber);
 		}
 
-		if (m_variablesTable->size()) 
+		if (m_variablesTable->size())
 		{
 			for (Variable var : *m_variablesTable)
 			{
@@ -109,22 +109,22 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 			}
 		}
 
-		variable.m_name = idToken->value; 
+		variable.m_name = idToken->value;
 		variable.m_type = help_type;
 		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
 
 		m_variablesTable->push_back(variable);
 
-		if (identifiersDefinition->formingTokens.size() == 3) 
+		if (identifiersDefinition->formingTokens.size() == 3)
 		{
 			identifiersDefinition = &identifiersDefinition->formingTokens.front();
 		}
-		else 
+		else
 		{
 			identifiersDefinition = NULL;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -166,39 +166,55 @@ bool VariablesTable::DoesVariableExists(string variablesName)
 string VariablesTable::getType(string varName)
 {
 	string type = "";
-	
-	if (m_variablesTable ->size()) 
+
+	if (m_variablesTable->size())
 	{
-		for (Variable var : *m_variablesTable )
-		{			
+		for (Variable var : *m_variablesTable)
+		{
 			if (var.m_name == varName)
-			{			
+			{
 				type += var.m_type;
 				break;
 			}
 		}
-	}	
+	}
 	return type;
 }
 
-int VariablesTable::getOffset(string varName) 
-{	
-	int offset = 0;
-	
-	if (m_variablesTable ->size()) 
+int VariablesTable::getSize(string varName)
+{
+	if (m_variablesTable->size())
 	{
-		for (Variable var : *m_variablesTable )
-		{			
+		for (Variable var : *m_variablesTable)
+		{
 			if (var.m_name == varName)
-			{			
-				offset += + var.m_size;
+			{
+				return var.m_size;
+			}
+		}
+	}
+	return -1;
+}
+
+int VariablesTable::getOffset(string varName)
+{
+	int offset = 0;
+
+	if (m_variablesTable->size())
+	{
+		for (Variable var : *m_variablesTable)
+		{
+			if (var.m_name == varName)
+			{
+				offset += +var.m_size;
 				break;
 			}
 			offset = offset + var.m_size;
 		}
-	}	
+	}
 	return offset;
 }
+
 
 vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 {
@@ -206,7 +222,7 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 	std::stack<Token*> nextTokens;
 	vector<string> expressionStack;
 
-	do 
+	do
 	{
 		if (currToken->formingTokens.size() == 1)
 		{
@@ -264,9 +280,9 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 			}
 
 		}
-	} 
-	while (currToken->formingTokens.size());
+	} while (currToken->formingTokens.size());
 
+	CompareTypes(stack, expressionStack);
 	reverse(expressionStack.begin(), expressionStack.end());
 
 	return expressionStack;
@@ -280,4 +296,82 @@ Token *VariablesTable::GetRootToken(Token *token)
 	}
 
 	return token;
+}
+
+void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
+{
+	Token *leftPart = NULL;
+	bool isElementOfArray = false;
+	bool is2DArray = false;
+
+	if (stack.at(stack.size() - 3).symbol.name == RuleName::IDENTIFIER())
+	{
+		leftPart = &stack.at(stack.size() - 3);
+	}
+	else
+	{
+		leftPart = &stack.at(stack.size() - 6);
+		isElementOfArray = true;
+		if (stack.at(stack.size() - 4).formingTokens.size() == 3) {
+			is2DArray = true;
+		}
+	}
+
+	if (isElementOfArray && !is2DArray)
+	{
+
+	}
+	if (isElementOfArray && is2DArray)
+	{
+
+	}
+	if (!isElementOfArray)
+	{
+		string type = getType(leftPart->value);
+		if (type == "int")
+		{
+
+		}
+		else
+		{
+			if (type == "bool")
+			{
+
+			}
+			else
+			{
+				if (type == "int_array" || type == "bool_array" || type == "int_double_array" || type == "bool_double_array")
+				{
+					if (!IsAssignableArrayExpression(stack, leftPart))
+					{
+						ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->value, leftPart->lineNumber);
+					}
+				}
+			}
+		}
+	}
+}
+
+bool VariablesTable::IsAssignableArrayExpression(vector<Token> stack, Token *arrayToken)
+{
+	if (stack.size() == 1)
+	{
+		if (getType(arrayToken->value) != getType(stack.back().value))
+		{
+			return false;
+		}
+		else
+		{
+			if (getSize(arrayToken->value) != getSize(stack.back().value))
+			{
+				return false;
+			}
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
 }

@@ -13,6 +13,9 @@ class VariablesTable
 private:
 	Token *GetLastVariable(Token *token);
 	void GetBodyWithoutTail(Token & token);
+	void CompareTypes(vector<Token> stack, vector<string> rightPart);
+	bool IsAssignableArrayExpression(vector<Token> stack, Token *arrayToken);
+
 	Token *m_tempToken;
 public:
 	VariablesTable();
@@ -24,6 +27,7 @@ public:
 	static Token *GetRootToken(Token *token);
 
 	int getOffset(string varName);
+	int getSize(string varName);
 	string getType(string varName);	
 	vector<string> GetExpressionStack(vector<Token> stack);
 
