@@ -6,6 +6,21 @@ using namespace std;
 class RuleName
 {
 public:
+	static const string GOAL()
+	{
+		return "Goal";
+	}
+
+	static const string NONTERMINAL()
+	{
+		return "nonTerminal";
+	}
+	static const string EOF_RULE()
+	{
+		return "EOF";
+	}
+
+
 	static const string IDENTIFIER_DEFINITION()
 	{
 		return "identifier_definition";
@@ -36,11 +51,37 @@ public:
 	{
 		return "read";
 	}
+	static const string WHILE()
+	{
+		return "while";
+	}
+
+
+	static const string IF()
+	{
+		return "if";
+	}
+	static const string ELSE()
+	{
+		return "else";
+	}
+	static const string IF_CONSTRUCTION()
+	{
+		return "if_construction";
+	}
+	static const string ELSE_CONSTRUCTION()
+	{
+		return "else_construction";
+	}
 
 
 	static const string EXPRESSION_AND_SYMBOL()
 	{
 		return "expression_and_symbol";
+	}
+	static const string EXPRESSION_6()
+	{
+		return "expression_6";
 	}
 	static const string EXPRESSION_5()
 	{
@@ -49,6 +90,18 @@ public:
 	static const string EXPRESSION_4()
 	{
 		return "expression_4";
+	}
+	static const string EXPRESSION_3()
+	{
+		return "expression_3";
+	}
+	static const string EXPRESSION_2()
+	{
+		return "expression_2";
+	}
+	static const string EXPRESSION_1()
+	{
+		return "expression_1";
 	}
 	static const string EXPRESSION_0()
 	{

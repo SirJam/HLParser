@@ -25,12 +25,12 @@ Token Parser::createTokenEOF()
 {
 	Symbol symbol;
 	symbol.index = 0;
-	symbol.name = "EOF";
+	symbol.name = RuleName::EOF_RULE();
 	symbol.type = 3;
 
 	int lineNumber = m_tokens.size() ? m_tokens.back().lineNumber : 0;
 
-	return Token(symbol, "EOF", lineNumber);
+	return Token(symbol, RuleName::EOF_RULE(), lineNumber);
 }
 
 Symbol Parser::symbolWithIndex(int index)
@@ -73,9 +73,9 @@ void Parser::Shift(Action action, Token token)
 	lastAction = 1;	
 
 	if (m_tokens.back().symbol.name == ")") {
-		if (m_tokens.end()[-2].symbol.name == "expression_0" &&
+		if (m_tokens.end()[-2].symbol.name == RuleName::EXPRESSION_0() &&
 			m_tokens.end()[-3].symbol.name == "(" &&
-			m_tokens.end()[-4].symbol.name == "if") {
+			m_tokens.end()[-4].symbol.name == RuleName::IF()) {
 			string falseLabel;
 			cout << "if_start" << endl;
 			//generator->createIfExpressionStartPart(falseLabel);
@@ -114,7 +114,7 @@ void Parser::computeProduction(Production *production)
 		generator->createVariableSpace(size); //allocate space
 		//cout << size << endl;
 	}
-	else if (symbol.name == "expression_3")
+	else if (symbol.name == RuleName::EXPRESSION_3())
 	{
 		Token *addopToken = &m_tokens.end()[-2];
 		Token *firstOperand = &m_tokens.end()[-3];
@@ -140,7 +140,7 @@ void Parser::computeProduction(Production *production)
 			cout << "<=" << endl;
 		}
 	}
-	else if (symbol.name == "expression_4") // + -
+	else if (symbol.name == RuleName::EXPRESSION_4()) // + -
 	{
 		if (production->handles.size() == 3) 
 		{			
@@ -163,7 +163,7 @@ void Parser::computeProduction(Production *production)
 			}
 		}
 	}	
-	else if (symbol.name == "expression_5") 
+	else if (symbol.name == RuleName::EXPRESSION_5()) 
 	{
 		Token *addopToken = &m_tokens.end()[-2];
 		Token *firstOperand = &m_tokens.end()[-3];
@@ -183,7 +183,7 @@ void Parser::computeProduction(Production *production)
 			//generator->createDivideOperation();
 		}
 	}
-	else if (symbol.name == "Goal") // programm end
+	else if (symbol.name == RuleName::GOAL()) // programm end
 	{
 		//clear stack
 		int size = 0;
@@ -223,15 +223,15 @@ void Parser::computeProduction(Production *production)
 		{
 			cout << m_tokens.end()[-7].value << "[" << VariablesTable::GetRootToken(&m_tokens.end()[-5])->value << "]=" << endl;
 		}		
-		if (m_tokens.end()[-7].symbol.name == "while")
+		if (m_tokens.end()[-7].symbol.name == RuleName::WHILE())
 		{
 			cout << "while" << endl;
 		}		
 	}
-	else if (symbol.name == "if_construction") {
+	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {
 		cout << "if_end" << endl;
 	}
-	else if (symbol.name == "else_construction") {
+	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {
 		cout << "else_construction" << endl;
 	}
 }
@@ -268,7 +268,7 @@ bool Parser::Reduce(Action action)
 				}
 			}
 
-			Token nonTerminalToken(symbolNonTerminal, "nonTerminal", lineNum);
+			Token nonTerminalToken(symbolNonTerminal, RuleName::NONTERMINAL(), lineNum);
 			nonTerminalToken.formingTokens = formingTokens;
 			m_tokens.push_back(nonTerminalToken);
 			// Finding next state
