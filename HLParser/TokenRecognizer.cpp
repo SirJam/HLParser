@@ -9,7 +9,8 @@ TokenRecognizer::TokenRecognizer(vector<Symbol> const& symbolTable)
 
 Symbol TokenRecognizer::TokenTypeByTokensValue(string const& value)
 {
-	for (Symbol symbol : symbols) {
+	for (Symbol symbol : symbols) 
+	{
 		if (value == symbol.name && symbol.type == 1 && value != RuleName::EOF_RULE() && value != RuleName::ERROR()
 			&& value != RuleName::WHITESPACE() && value != RuleName::IDENTIFIER() && value != RuleName::DIGITS()) 
 		{
@@ -25,15 +26,18 @@ Symbol TokenRecognizer::TokenTypeByTokensValue(string const& value)
 
 Symbol TokenRecognizer::TokenTypeByTokenName(string const& name)
 {
-	for (Symbol symbol : symbols) {
+	for (Symbol symbol : symbols) 
+	{
 		if (symbol.name == name) return symbol;
 	}
 }
 
 bool TokenRecognizer::isNumber(string const& value)
 {
-	for (char ch : value) {
-		if (!isdigit(ch)) {
+	for (char ch : value) 
+	{
+		if (!isdigit(ch)) 
+		{
 			return false;
 		}
 	}
@@ -43,8 +47,10 @@ bool TokenRecognizer::isNumber(string const& value)
 bool TokenRecognizer::isId(string const& value)
 {
 	bool isPotentialId = true;
-	for (char ch : value) {
-		if (!isdigit(ch) && !isalpha(ch)) {
+	for (char ch : value) 
+	{
+		if (!isdigit(ch) && !isalpha(ch)) 
+		{
 			isPotentialId = false;
 		}
 	}

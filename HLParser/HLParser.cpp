@@ -9,7 +9,7 @@
 int main(int argc, char * argv[])
 {
 	char *inputFileName = "input.txt";
-
+	
 	Generator generator;
 	Parser parser(&generator);	
 
