@@ -1,27 +1,24 @@
 main
 {
-    bool t;
-	int a, b, c;    
-    a = 2;
-    b = 0 - 6;
-    c = a * b;                                          //-12
-    t = a > b;
-    write(t);                                           //1
-    t = a < c;
-    write(t);                                           //0
-    t = a >= b;
-    write(t);                                           //1
-    t = a <= b;
-    write(t);                                           //0
-    t = ((a >= b) && (c < b)) == TRUE;                  
-    write(t);                                           //1
-    t = (a == b)
-    write(t);                                           //0
-    t = (a != b)
-    write(t);                                           //1
-    t = (((a <= b) || TRUE) && (c < b)) == TRUE;
-    write(t);                                           //1
-    t = (((a <= b) || TRUE) && (c < b)) == FALSE;
-    write(t);                                           //0
-    return 0; // 101010110
-}                                                           
+    int a;
+    int b;
+    a = 9;
+    b = 3;
+    if (a > b)
+    {
+        if (a == 9)
+        {
+            a = 5;
+        }
+        else
+        {
+            a = 3;
+        }
+    }
+    else
+    {
+        a = 0;
+    }
+ 
+  return 0;
+}

@@ -210,7 +210,15 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == RuleName::EXPRESSION_0())
 	{
-		cout << "rex" << endl;
+		cout << "rex" << endl;  
+		if (m_tokens.end()[-8].value == "if")
+		{
+			cout << m_tokens.end()[-6].symbol.name << endl;//expression_0   
+			vector<Token> expression_0;
+			expression_0.push_back(m_tokens.end()[-6].formingTokens.back());
+			vector<string> l = (m_variablesTable->GetExpressionStack(expression_0, false));
+			m_tokens;
+		}
 	}
 	else if (symbol.name == RuleName::GOAL()) // programm end
 	{
