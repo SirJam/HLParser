@@ -46,6 +46,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	string type;
 	string help_type;
 	int factor = 1;
+	int xDimention = 0;
 
 	if (stack.at(stack.size() - 3).formingTokens.back().symbol.name == RuleName::PRIMITIVE_TYPE())
 	{
@@ -67,7 +68,8 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		else
 		{
 			help_type = type + "_double_array";
-			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) + stoi(factorToken.formingTokens.front().formingTokens.back().value);
+			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) * stoi(factorToken.formingTokens.front().formingTokens.back().value);			
+			xDimention = stoi(factorToken.formingTokens.back().formingTokens.back().value);
 		}
 	}
 
@@ -112,6 +114,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		variable.m_name = idToken->value; 
 		variable.m_type = help_type;
 		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
+		variable.m_xDimension = xDimention;
 
 		m_variablesTable->push_back(variable);
 
@@ -179,6 +182,24 @@ string VariablesTable::getType(string varName)
 		}
 	}	
 	return type;
+}
+
+int VariablesTable::getXDimention(string varName)
+{
+	int x = 0;
+	
+	if (m_variablesTable ->size()) 
+	{
+		for (Variable var : *m_variablesTable )
+		{			
+			if (var.m_name == varName)
+			{			
+				x = var.m_xDimension;
+				break;
+			}
+		}
+	}	
+	return x;
 }
 
 int VariablesTable::getOffset(string varName) 

@@ -12,10 +12,8 @@ public:
 	Generator();
 
 	void createASMFile(string fileName);
-
 	void createProgramStart();	
 	void createProgramEnd(int const varSpace);
-
 	
 	void createAddOperation();	
 	void createSubstractOperation();
@@ -24,18 +22,30 @@ public:
 
 	void createVariableSpace(int const space);
 
-	void createIntVariable(int const offset, string const type);
+	void createIntVariable(int const offset, string const type, int x = 0);
 	void createIntConstant(int num);
+		
+	void createPrintInteger();	
 
-	void createAssignmentOperation(int const offset, bool const isInArray, int const typeSize);
+	void createAssignmentOperation(int const offset, string const type, int x = 0);
 
-	void addReadVariable(int const offset, string const varType);
-	void addWriteVariable(int const offset, bool const isInArray, int const typeSize);
+	void createRelExpression(const string& relOperator);
+	void applyAndExpression();
+	void applyOrExpression();
+
+	void addReadVariable(int const offset, string const varType, int xDim = 0);
+	void addWriteVariable(int const offset, string const type, int xDim = 0);
 
 		
 private:
 	ostringstream programStream;
 	ostringstream dataStream;
 	ostringstream procedureStream;
-	string cleanfileName;	
+	
+	int labelsCount;
+	bool isPrintAdded, isInputOutputDataAdded, isReadAdded, isMainStringBufferAdded;
+
+	void addPrintFunctionality();
+	void addClearBuffer();
+	string getLabelName();
 };

@@ -92,8 +92,7 @@ void Parser::computeProduction(Production *production)
 	Token *token = &m_tokens.back();
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
-		m_variablesTable->TryToRegisterVariable(m_tokens);		
-		cout << token->symbol.name << endl;
+		m_variablesTable->TryToRegisterVariable(m_tokens);				
 	}
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
@@ -115,20 +114,33 @@ void Parser::computeProduction(Production *production)
 			else if (isdigit(stack[i][0])) {
 				generator->createIntConstant(atoi(stack[i].c_str()));
 			}
-			else if (stack[i] == ">") {
+			else if (stack[i] == ">" || stack[i] == "<" || 
+					 stack[i] == ">=" || stack[i] == "<=" ||
+					 stack[i] == "==" || stack[i] == "!=") {
+						 generator->createRelExpression(stack[i]);
+			}
+			else if (stack[i] == "&&") {
+				generator->applyAndExpression();
+			}
+			else if (stack[i] == "||") {
+				generator->applyOrExpression();
+			}
+			else if (stack[i] == "TRUE") {
+				generator->createIntConstant(1);
+			}
+			else if (stack[i] == "FALSE") {
+				generator->createIntConstant(0);
 			}
 			else { //identifier
 				int offset = m_variablesTable->getOffset(stack[i]);
 				string type = m_variablesTable->getType(stack[i]);
-				generator->createIntVariable(offset, type);
-				cout << type << endl;
+				int x = m_variablesTable->getXDimention(stack[i]);
+				generator->createIntVariable(offset, type, x);
 			}
 		}
-		cout << "E" << endl;
 	}
 	else if (symbol.name == RuleName::DEFINITION())
 	{
-		cout << "setMemory" << endl;
 		int size = 0;
 		if (m_variablesTable->m_variablesTable ->size()) 
 		{
@@ -138,7 +150,6 @@ void Parser::computeProduction(Production *production)
 			}
 		}		
 		generator->createVariableSpace(size); //allocate space
-		//cout << size << endl;
 	}
 	else if (symbol.name == RuleName::EXPRESSION_3())
 	{
@@ -151,19 +162,15 @@ void Parser::computeProduction(Production *production)
 			
 		if (operation == ">") 
 		{
-			cout << ">" << endl;
 		}
 		else if (operation == "<")
 		{
-			cout << "<" << endl;
 		}
 		else if (operation == ">=")
 		{
-			cout << ">=" << endl;
 		}
 		else if (operation == "<=")
 		{
-			cout << "<=" << endl;
 		}
 	}
 	else if (symbol.name == RuleName::EXPRESSION_4()) // + -
@@ -179,13 +186,9 @@ void Parser::computeProduction(Production *production)
 			
 			if (operation == "+") 
 			{
-				cout << "+" << endl;
-				//generator->createAddOperation();
 			}
 			else if (operation == "-")
 			{
-				cout << "-" << endl;
-				//generator->createSubstractOperation();
 			}
 		}
 	}	
@@ -200,13 +203,9 @@ void Parser::computeProduction(Production *production)
 			
 		if (operation == "*") 
 		{
-			cout << "*" << endl;
-			//generator->createMultiplyOperation();
 		}
 		else if (operation == "/")
 		{
-			cout << "/" << endl;
-			//generator->createDivideOperation();
 		}
 	}
 	else if (symbol.name == RuleName::GOAL()) // programm end
@@ -223,7 +222,7 @@ void Parser::computeProduction(Production *production)
 		generator->createProgramEnd(size);
 	}
 	else if (symbol.name == RuleName::STATEMENT()) // programm end
-	{		
+	{	
 		if (m_tokens.at(m_tokens.size() - 4).symbol.name == RuleName::IDENTIFIER())
 		{
 			m_variablesTable->CheckExistingOfVariable(m_tokens, true);			
@@ -234,24 +233,47 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-5].symbol.name == RuleName::WRITE())
 		{
-			cout << "write" << endl;
-			//generator->createPrintInteger(false);
+			generator->createPrintInteger();
 		}
 		if (m_tokens.end()[-5].symbol.name == RuleName::READ())
 		{
-			cout << "read" << endl;
+			//cout << "read" << endl;
 		}
 		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name != "]")
 		{			
-			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), false, 4);
+			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), m_variablesTable->getType(m_tokens.end()[-4].value));
 		}
-		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")
-		{
-			cout << m_tokens.end()[-7].value << "[" << VariablesTable::GetRootToken(&m_tokens.end()[-5])->value << "]=" << endl;
+		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")//либо одномерный, либо 2мерный массив
+		{			
+			Token index = m_tokens.end()[-5];
+			if (index.formingTokens.size() == 1) //одномерный массив
+			{
+				vector<Token> expression_0;
+				expression_0.push_back(index.formingTokens.back());
+				string index = m_variablesTable->GetExpressionStack(expression_0)[0];
+				generator->createIntConstant(atoi(index.c_str()));
+				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), m_variablesTable->getType(m_tokens.end()[-7].value));				
+			}
+			else if (index.formingTokens.size() == 3) //двумерный массив
+			{
+				vector<string> stack1 = m_variablesTable->GetExpressionStack(index.formingTokens);//first index
+				Token index = m_tokens.end()[-5];
+				vector<string> stack2 = m_variablesTable->GetExpressionStack(index.formingTokens);//first index
+				//Token index = m_tokens.end()[-5];
+
+				vector<Token> expression_0, expression_1;
+				expression_0.push_back(index.formingTokens.front());
+				expression_1.push_back(index.formingTokens.back());
+				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_1)[0].c_str())); //первый индекс
+				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_0)[0].c_str())); //второй индекс
+				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), 
+												     m_variablesTable->getType(m_tokens.end()[-7].value),
+													 m_variablesTable->getXDimention(m_tokens.end()[-7].value));				
+			}
 		}		
 		if (m_tokens.end()[-7].symbol.name == RuleName::WHILE())
 		{
-			cout << "while" << endl;
+			//cout << "while" << endl;
 		}		
 	}
 	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {

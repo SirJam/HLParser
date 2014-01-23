@@ -25,6 +25,7 @@ public:
 
 	int getOffset(string varName);
 	string getType(string varName);	
+	int getXDimention(string varName);
 	vector<string> GetExpressionStack(vector<Token> stack);
 
 	vector<Variable> *m_variablesTable;

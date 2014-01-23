@@ -14,5 +14,6 @@ public:
 	string m_type;
 	string m_value;
 	int m_size;
+	int m_xDimension;
 };
 

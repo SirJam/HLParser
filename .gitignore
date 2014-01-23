@@ -12,3 +12,4 @@
 *.log
 *.pch
 *.sdf
+HLParser/input.asm
