@@ -4,6 +4,7 @@
 #include "Production.h"
 #include "Action.h"
 #include "Token.h"
+#include <stack> 
 #include "Generator.h"
 #include "RuleName.h"
 #include "VariablesTable.h"
@@ -32,6 +33,8 @@ private:
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
 	vector<string> createdIfExpressionsLabels;
+	vector<string> createdElseExpressionsLabels;
+	stack<string> whileLabels;
 
 	VariablesTable *m_variablesTable;
 

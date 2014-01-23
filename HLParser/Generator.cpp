@@ -441,3 +441,39 @@ void Generator::createIfExpressionEndPart(string falseLabel)
 	stream << (falseLabel + ":\n\n");
 	programStream << stream.str();
 }
+
+//void Generator::createElseExpressionEndPart(string label)
+//{
+//	ostringstream stream;		
+//	stream << (label + ":\n\n");
+//	programStream << stream.str();
+//}
+
+string Generator::createWhileExpressionStartLabel(string &label)
+{
+	ostringstream stream;
+	label = getLabelName();	
+	stream << (label + ":\n");	
+	programStream << stream.str();
+
+	string secondLabel = getLabelName();	
+	return secondLabel;
+}
+
+void Generator::createWhileExpressionStartPart(string label)
+{
+	ostringstream stream;	
+	stream << "POP EAX\n";
+	stream << "CMP EAX, 0\n";
+	stream << ("JE >" + label + "\n\n");
+
+	programStream << stream.str();
+}
+
+void Generator::createWhileExpressionEndPart(string label1, string label2)
+{
+	ostringstream stream;	
+	stream << "JMP " << label1 << "\n";
+	stream << (label2 + ":\n\n");
+	programStream << stream.str();
+}

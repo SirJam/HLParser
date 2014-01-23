@@ -77,6 +77,9 @@ void Parser::Shift(Action action, Token token)
 			m_tokens.end()[-3].symbol.name == "(" &&
 			m_tokens.end()[-4].symbol.name == RuleName::IF()) {			
 			cout << "if_st\n";
+			string falseLabel;	
+			generator->createIfExpressionStartPart(falseLabel);
+			createdIfExpressionsLabels.push_back(falseLabel);
 		}
 	}*/
 }
@@ -137,8 +140,8 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
-		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens, true);
-		parseExpression(stack);		
+		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens, true);				
+		parseExpression(stack);	
 	}
 	else if (symbol.name == RuleName::DEFINITION())
 	{
@@ -217,11 +220,25 @@ void Parser::computeProduction(Production *production)
 			expression_0.push_back(m_tokens.end()[-6]);
 			vector<string> ifCondition = (m_variablesTable->GetExpressionStack(expression_0, false));
 			parseExpression(ifCondition);
-			cout << "()\n";
 
 			string falseLabel;	
 			generator->createIfExpressionStartPart(falseLabel);
 			createdIfExpressionsLabels.push_back(falseLabel);
+		}
+		if (m_tokens.end()[-8].value == "while")
+		{		
+			string startLabel;	
+			string finLabel = generator->createWhileExpressionStartLabel(startLabel);
+			whileLabels.push(finLabel);	
+			whileLabels.push(startLabel);
+
+			vector<Token> expression_0;
+			expression_0.push_back(m_tokens.end()[-6]);
+			vector<string> whileCondition = (m_variablesTable->GetExpressionStack(expression_0, false));
+			parseExpression(whileCondition);
+			
+			generator->createWhileExpressionStartPart(finLabel);
+								
 		}
 	}
 	else if (symbol.name == RuleName::GOAL()) // programm end
@@ -283,7 +300,12 @@ void Parser::computeProduction(Production *production)
 		}		
 		if (m_tokens.end()[-7].symbol.name == RuleName::WHILE())
 		{
-			//cout << "while" << endl;
+			string l1, l2;
+			l1 = whileLabels.top();
+			whileLabels.pop();
+			l2 = whileLabels.top();
+			whileLabels.pop();
+			generator->createWhileExpressionEndPart(l1, l2);
 		}		
 	}
 	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {
@@ -293,8 +315,8 @@ void Parser::computeProduction(Production *production)
 			cout << "if_en\n";
 		}
 	}
-	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {
-		
+	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {			
+		cout << "if_else\n";
 	}
 }
 

@@ -35,6 +35,12 @@ public:
 
 	void createIfExpressionStartPart(string &falseLabel);
 	void createIfExpressionEndPart(string falseLabel);
+	//void createElseExpressionStartPart(string &label);
+	//void createElseExpressionEndPart(string label);
+
+	string createWhileExpressionStartLabel(string &label);
+	void createWhileExpressionStartPart(string label);
+	void createWhileExpressionEndPart(string label1, string label2);
 
 	void addReadVariable(int const offset, string const varType, int xDim = 0);
 	void addWriteVariable(int const offset, string const type, int xDim = 0);
