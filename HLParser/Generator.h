@@ -36,6 +36,7 @@ public:
 	void addReadVariable(int const offset, string const varType, int xDim = 0);
 	void addWriteVariable(int const offset, string const type, int xDim = 0);
 
+	void writeSomething();
 		
 private:
 	ostringstream programStream;
@@ -46,6 +47,6 @@ private:
 	bool isPrintAdded, isInputOutputDataAdded, isReadAdded, isMainStringBufferAdded;
 
 	void addPrintFunctionality();
-	void addClearBuffer();
-	string getLabelName();
+	void addClearBuffer();	
+	string getLabelName();	
 };

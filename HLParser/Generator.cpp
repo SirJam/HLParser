@@ -425,3 +425,10 @@ void Generator::applyOrExpression()
 
 	programStream << stream.str();
 }
+
+void Generator::writeSomething()
+{
+	ostringstream stream;
+	stream << "something\n";
+	programStream << stream.str();
+}

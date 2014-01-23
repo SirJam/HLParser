@@ -76,11 +76,57 @@ void Parser::Shift(Action action, Token token)
 		if (m_tokens.end()[-2].symbol.name == RuleName::EXPRESSION_0() &&
 			m_tokens.end()[-3].symbol.name == "(" &&
 			m_tokens.end()[-4].symbol.name == RuleName::IF()) {
-			string falseLabel;			
-			cout << "if_start" << endl;
+			string falseLabel;		
+			generator->writeSomething();
+			//cout << "if_start" << endl;
 			//generator->createIfExpressionStartPart(falseLabel);
 			//createdIfExpressionsLabels.push_back(falseLabel);
 			//cout << ("PUSH LABEL " + falseLabel + "\n");
+		}
+	}
+}
+
+void Parser::parseExpression(vector<string> stack)
+{
+	for (int i = 0; i < stack.size(); i++)
+	{
+		if (stack[i] == "+") {
+			generator->createAddOperation();
+		}
+		else if (stack[i] == "-") {
+			generator->createSubstractOperation();
+		}
+		else if (stack[i] == "*") {
+			generator->createMultiplyOperation();
+		}
+		else if (stack[i] == "/") {
+			generator->createDivideOperation();
+		}
+		else if (isdigit(stack[i][0])) {
+			generator->createIntConstant(atoi(stack[i].c_str()));
+		}
+		else if (stack[i] == ">" || stack[i] == "<" || 
+					stack[i] == ">=" || stack[i] == "<=" ||
+					stack[i] == "==" || stack[i] == "!=") {
+						generator->createRelExpression(stack[i]);
+		}
+		else if (stack[i] == "&&") {
+			generator->applyAndExpression();
+		}
+		else if (stack[i] == "||") {
+			generator->applyOrExpression();
+		}
+		else if (stack[i] == "TRUE") {
+			generator->createIntConstant(1);
+		}
+		else if (stack[i] == "FALSE") {
+			generator->createIntConstant(0);
+		}
+		else { //identifier
+			int offset = m_variablesTable->getOffset(stack[i]);
+			string type = m_variablesTable->getType(stack[i]);
+			int x = m_variablesTable->getXDimention(stack[i]);
+			generator->createIntVariable(offset, type, x);
 		}
 	}
 }
@@ -97,47 +143,7 @@ void Parser::computeProduction(Production *production)
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens, true);
-		for (int i = 0; i < stack.size(); i++)
-		{
-			if (stack[i] == "+") {
-				generator->createAddOperation();
-			}
-			else if (stack[i] == "-") {
-				generator->createSubstractOperation();
-			}
-			else if (stack[i] == "*") {
-				generator->createMultiplyOperation();
-			}
-			else if (stack[i] == "/") {
-				generator->createDivideOperation();
-			}
-			else if (isdigit(stack[i][0])) {
-				generator->createIntConstant(atoi(stack[i].c_str()));
-			}
-			else if (stack[i] == ">" || stack[i] == "<" || 
-					 stack[i] == ">=" || stack[i] == "<=" ||
-					 stack[i] == "==" || stack[i] == "!=") {
-						 generator->createRelExpression(stack[i]);
-			}
-			else if (stack[i] == "&&") {
-				generator->applyAndExpression();
-			}
-			else if (stack[i] == "||") {
-				generator->applyOrExpression();
-			}
-			else if (stack[i] == "TRUE") {
-				generator->createIntConstant(1);
-			}
-			else if (stack[i] == "FALSE") {
-				generator->createIntConstant(0);
-			}
-			else { //identifier
-				int offset = m_variablesTable->getOffset(stack[i]);
-				string type = m_variablesTable->getType(stack[i]);
-				int x = m_variablesTable->getXDimention(stack[i]);
-				generator->createIntVariable(offset, type, x);
-			}
-		}
+		parseExpression(stack);		
 	}
 	else if (symbol.name == RuleName::DEFINITION())
 	{
@@ -208,6 +214,16 @@ void Parser::computeProduction(Production *production)
 		{
 		}
 	}
+	else if (symbol.name == RuleName::EXPRESSION_0())
+	{		
+		if (m_tokens.end()[-8].value == "if")
+		{			
+			vector<Token> expression_0;
+			expression_0.push_back(m_tokens.end()[-6]);
+			vector<string> ifCondition = (m_variablesTable->GetExpressionStack(expression_0, false));
+			parseExpression(ifCondition);
+		}
+	}
 	else if (symbol.name == RuleName::GOAL()) // programm end
 	{
 		//clear stack
@@ -250,8 +266,7 @@ void Parser::computeProduction(Production *production)
 			{
 				vector<Token> expression_0;
 				expression_0.push_back(index.formingTokens.back());
-				string index = m_variablesTable->GetExpressionStack(expression_0, false)[0];
-				generator->createIntConstant(atoi(index.c_str()));
+				parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
 				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), m_variablesTable->getType(m_tokens.end()[-7].value));				
 			}
 			else if (index.formingTokens.size() == 3) //двумерный массив
@@ -259,9 +274,8 @@ void Parser::computeProduction(Production *production)
 				vector<Token> expression_0, expression_1;
 				expression_0.push_back(index.formingTokens.front());
 				expression_1.push_back(index.formingTokens.back());	
-				//
-				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_1, false)[0].c_str())); //первый индекс
-				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_0, false)[0].c_str())); //второй индекс
+				parseExpression(m_variablesTable->GetExpressionStack(expression_1, false));
+				parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
 				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), 
 												     m_variablesTable->getType(m_tokens.end()[-7].value),
 													 m_variablesTable->getXDimention(m_tokens.end()[-7].value));				
@@ -273,10 +287,10 @@ void Parser::computeProduction(Production *production)
 		}		
 	}
 	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {
-		cout << "if_end" << endl;
+		
 	}
 	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {
-		cout << "else_construction" << endl;
+		
 	}
 }
 

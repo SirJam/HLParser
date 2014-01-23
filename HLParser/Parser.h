@@ -39,6 +39,7 @@ private:
 	bool Reduce(Action action);
 	void computeProduction(Production *production);
 	
+	void parseExpression(vector<string> stack);
 
 	void Accept();
 	void HandleError(Token token);
