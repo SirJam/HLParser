@@ -208,6 +208,10 @@ void Parser::computeProduction(Production *production)
 		{
 		}
 	}
+	else if (symbol.name == RuleName::EXPRESSION_0())
+	{
+		cout << "rex" << endl;
+	}
 	else if (symbol.name == RuleName::GOAL()) // programm end
 	{
 		//clear stack
