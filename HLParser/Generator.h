@@ -33,6 +33,9 @@ public:
 	void applyAndExpression();
 	void applyOrExpression();
 
+	void createIfExpressionStartPart(string &falseLabel);
+	void createIfExpressionEndPart(string falseLabel);
+
 	void addReadVariable(int const offset, string const varType, int xDim = 0);
 	void addWriteVariable(int const offset, string const type, int xDim = 0);
 

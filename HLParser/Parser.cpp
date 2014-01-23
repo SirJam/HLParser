@@ -72,18 +72,13 @@ void Parser::Shift(Action action, Token token)
 	m_states.push_back(action.target);
 	lastAction = 1;	
 
-	if (m_tokens.back().symbol.name == ")") {
+	/*if (m_tokens.back().symbol.name == ")") {
 		if (m_tokens.end()[-2].symbol.name == RuleName::EXPRESSION_0() &&
 			m_tokens.end()[-3].symbol.name == "(" &&
-			m_tokens.end()[-4].symbol.name == RuleName::IF()) {
-			string falseLabel;		
-			generator->writeSomething();
-			//cout << "if_start" << endl;
-			//generator->createIfExpressionStartPart(falseLabel);
-			//createdIfExpressionsLabels.push_back(falseLabel);
-			//cout << ("PUSH LABEL " + falseLabel + "\n");
+			m_tokens.end()[-4].symbol.name == RuleName::IF()) {			
+			cout << "if_st\n";
 		}
-	}
+	}*/
 }
 
 void Parser::parseExpression(vector<string> stack)
@@ -217,11 +212,16 @@ void Parser::computeProduction(Production *production)
 	else if (symbol.name == RuleName::EXPRESSION_0())
 	{		
 		if (m_tokens.end()[-8].value == "if")
-		{			
+		{		
 			vector<Token> expression_0;
 			expression_0.push_back(m_tokens.end()[-6]);
 			vector<string> ifCondition = (m_variablesTable->GetExpressionStack(expression_0, false));
 			parseExpression(ifCondition);
+			cout << "()\n";
+
+			string falseLabel;	
+			generator->createIfExpressionStartPart(falseLabel);
+			createdIfExpressionsLabels.push_back(falseLabel);
 		}
 	}
 	else if (symbol.name == RuleName::GOAL()) // programm end
@@ -287,7 +287,11 @@ void Parser::computeProduction(Production *production)
 		}		
 	}
 	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {
-		
+		if (!createdIfExpressionsLabels.empty()) {
+			generator->createIfExpressionEndPart(createdIfExpressionsLabels.back());
+			createdIfExpressionsLabels.pop_back();
+			cout << "if_en\n";
+		}
 	}
 	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {
 		

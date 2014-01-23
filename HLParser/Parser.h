@@ -31,6 +31,7 @@ private:
 	vector<int> m_states;
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
+	vector<string> createdIfExpressionsLabels;
 
 	VariablesTable *m_variablesTable;
 

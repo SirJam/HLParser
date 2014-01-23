@@ -309,7 +309,7 @@ void Generator::addPrintFunctionality()
 	streamOfProcedures << "CMP BL, 0x0\n";
 	streamOfProcedures << "JNE <SL_LOOP\n";
 	streamOfProcedures << "MOV EAX, ECX\n";
-	streamOfProcedures << "RET\n";
+	streamOfProcedures << "RET\n\n";
 
 	dataStream << streamOfData.str();
 	procedureStream << streamOfProcedures.str();
@@ -362,7 +362,6 @@ void Generator::createRelExpression(const string& rel)
 
 	string trueLabel = getLabelName();
 	string endLabel = getLabelName();
-	cout << trueLabel << " " << endLabel << std::endl;
 	command += " >" + trueLabel + "\n";
 
 	stream << command;
@@ -371,7 +370,7 @@ void Generator::createRelExpression(const string& rel)
 	stream << (trueLabel) + ":\n";
 	stream << "MOV EAX, 1\n";
 	stream << (endLabel) + ":\n";
-	stream << "PUSH EAX\n";
+	stream << "PUSH EAX\n\n";
 	
 	programStream << stream.str();
 }
@@ -400,7 +399,7 @@ void Generator::applyAndExpression()
 	stream << ("JMP >" + endLabel + "\n");
 	stream << (elseLabel + ":\n");
 	stream << "PUSH 0\n";
-	stream << (endLabel + ":\n");
+	stream << (endLabel + ":\n\n");
 
 	programStream << stream.str();
 }
@@ -421,14 +420,24 @@ void Generator::applyOrExpression()
 	stream << ("JMP >" + endLabel + "\n");
 	stream << (trueLabel + ":\n");
 	stream << "PUSH 0\n";
-	stream << (endLabel + ":\n");
-
+	stream << (endLabel + ":\n\n");
 	programStream << stream.str();
 }
 
-void Generator::writeSomething()
+void Generator::createIfExpressionStartPart(string &falseLabel)
 {
 	ostringstream stream;
-	stream << "something\n";
+
+	falseLabel = getLabelName();	
+	stream << "POP EAX\n";
+	stream << "CMP EAX, 0\n";
+	stream << ("JE >" + falseLabel + "\n\n");
+	programStream << stream.str();
+}
+
+void Generator::createIfExpressionEndPart(string falseLabel)
+{
+	ostringstream stream;		
+	stream << (falseLabel + ":\n\n");
 	programStream << stream.str();
 }
