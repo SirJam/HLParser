@@ -321,13 +321,13 @@ void Parser::Accept()
 
 void Parser::HandleError(Token token)
 {
-	string stream;
+	string expectedValues;
 	for (Action action : *m_actionsTable) {
 		if (action.stateIndex == m_states.back()) {
-			stream += "'";
-			stream += symbolWithIndex(action.symbolIndex).name; 
-			stream += "' ";
+			expectedValues += "    '";
+			expectedValues += symbolWithIndex(action.symbolIndex).name;
+			expectedValues += "'\n";
 		}
 	}
-	ErrorHandler::failWithErrorCode(101, stream, token.value, token.lineNumber);
+	ErrorHandler::FailedWithTokenError(expectedValues, token.value, token.lineNumber);
 }

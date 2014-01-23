@@ -30,6 +30,10 @@ public:
 	{
 		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "'" + name + "' array can only assign it an array of similar type and size!\n");
 	}
+	static void FailedWithTokenError(string expectedValues, string name, int line)
+	{
+		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "\n  --==Syntax error==--\n\n" + "Expected tokens: \n\n" + expectedValues + "\nReceived token: '" + name + "'!\n");
+	}
 
 	static void ShowErrorLineAndMessageAndExit(string str)
 	{

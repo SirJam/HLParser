@@ -1,32 +1,29 @@
 #include "StdAfx.h"
 #include "TokenRecognizer.h"
+#include "RuleName.h"
 
 TokenRecognizer::TokenRecognizer(vector<Symbol> const& symbolTable)
 {
 	symbols = symbolTable;
 }
 
-Symbol TokenRecognizer::tokenTypeByValue(string const& value)
+Symbol TokenRecognizer::TokenTypeByTokensValue(string const& value)
 {
 	for (Symbol symbol : symbols) {
-		if (value == symbol.name
-			&& symbol.type == 1
-			&& value != "EOF" 
-			&& value != "Error" 
-			&& value != "Whitespace" 
-			&& value != "identifier"
-			&& value != "digits") {
+		if (value == symbol.name && symbol.type == 1 && value != RuleName::EOF_RULE() && value != RuleName::ERROR()
+			&& value != RuleName::WHITESPACE() && value != RuleName::IDENTIFIER() && value != RuleName::DIGITS()) 
+		{
 			return symbol;
 		}
 	}
 
-	if (isNumber(value)) return tokenTypeWithName("digits");
-	if (isId(value)) return tokenTypeWithName("identifier");
+	if (isNumber(value)) return TokenTypeByTokenName(RuleName::DIGITS());
+	if (isId(value)) return TokenTypeByTokenName(RuleName::IDENTIFIER());
 
-	return tokenTypeWithName("Error");
+	return TokenTypeByTokenName(RuleName::ERROR());
 }
 
-Symbol TokenRecognizer::tokenTypeWithName(string const& name)
+Symbol TokenRecognizer::TokenTypeByTokenName(string const& name)
 {
 	for (Symbol symbol : symbols) {
 		if (symbol.name == name) return symbol;

@@ -52,7 +52,7 @@ Token Lexer::nextToken()
 {
 	string word = readNextWord();
 
-	Symbol tokenType = tokenRecognizer.tokenTypeByValue(word);
+	Symbol tokenType = tokenRecognizer.TokenTypeByTokensValue(word);
 	Token token = Token(tokenType, word, scanner.currentLine);
 
 	return token;

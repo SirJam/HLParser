@@ -16,6 +16,7 @@
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TokenRecognizer.cpp" />
     <ClCompile Include="VariablesTable.cpp" />
+    <ClCompile Include="FunctionsTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Action.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="VariablesTable.h" />
     <ClInclude Include="TypeChecker.h" />
     <ClInclude Include="ReservedWords.h" />
+    <ClInclude Include="FunctionsTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="GoldGrammarTables.xml" />

@@ -19,6 +19,18 @@ public:
 	{
 		return "EOF";
 	}
+	static const string ERROR()
+	{
+		return "Error";
+	}
+	static const string WHITESPACE()
+	{
+		return "Whitespace";
+	}
+	static const string DIGITS()
+	{
+		return "digits";
+	}
 
 
 	static const string IDENTIFIER_DEFINITION()
