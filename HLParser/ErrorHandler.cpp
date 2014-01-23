@@ -40,9 +40,6 @@ void ErrorHandler::failWithErrorCode(int const code, string const& data1, string
 		case 0:
 			failWithScannerError(errorDetail, data1, data2, lineNumber);
 			break;
-		case 1:
-			failWithParserError(errorDetail, data1, data2, lineNumber);
-			break;
 		default:
 			break;
 	}
@@ -90,7 +87,6 @@ void ErrorHandler::failWithParserError(int const code, string const& data1, stri
 			errorStream << "Syntax error:\n" << "expected: " << data1 << "but got '" << data2 << "'";
 			break;
 		default:
-			errorStream << "Parser error with code " << code << " doesn't exist."; 
 			break;
 	}
 
