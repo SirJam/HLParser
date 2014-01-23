@@ -237,7 +237,7 @@ int VariablesTable::getOffset(string varName)
 }
 
 
-vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
+vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAssignment)
 {
 	Token *currToken = &stack.back();
 	std::stack<Token*> nextTokens;
@@ -316,7 +316,8 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack)
 		}
 	} while (currToken->formingTokens.size());
 
-	CompareTypes(stack, expressionStack);
+	if (isAssignment)
+		CompareTypes(stack, expressionStack);
 	reverse(expressionStack.begin(), expressionStack.end());
 
 	return expressionStack;

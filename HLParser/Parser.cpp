@@ -76,7 +76,7 @@ void Parser::Shift(Action action, Token token)
 		if (m_tokens.end()[-2].symbol.name == RuleName::EXPRESSION_0() &&
 			m_tokens.end()[-3].symbol.name == "(" &&
 			m_tokens.end()[-4].symbol.name == RuleName::IF()) {
-			string falseLabel;
+			string falseLabel;			
 			cout << "if_start" << endl;
 			//generator->createIfExpressionStartPart(falseLabel);
 			//createdIfExpressionsLabels.push_back(falseLabel);
@@ -96,7 +96,7 @@ void Parser::computeProduction(Production *production)
 	}
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
-		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens);
+		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens, true);
 		for (int i = 0; i < stack.size(); i++)
 		{
 			if (stack[i] == "+") {
@@ -250,22 +250,18 @@ void Parser::computeProduction(Production *production)
 			{
 				vector<Token> expression_0;
 				expression_0.push_back(index.formingTokens.back());
-				string index = m_variablesTable->GetExpressionStack(expression_0)[0];
+				string index = m_variablesTable->GetExpressionStack(expression_0, false)[0];
 				generator->createIntConstant(atoi(index.c_str()));
 				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), m_variablesTable->getType(m_tokens.end()[-7].value));				
 			}
 			else if (index.formingTokens.size() == 3) //двумерный массив
 			{
-				vector<string> stack1 = m_variablesTable->GetExpressionStack(index.formingTokens);//first index
-				Token index = m_tokens.end()[-5];
-				vector<string> stack2 = m_variablesTable->GetExpressionStack(index.formingTokens);//first index
-				//Token index = m_tokens.end()[-5];
-
 				vector<Token> expression_0, expression_1;
 				expression_0.push_back(index.formingTokens.front());
-				expression_1.push_back(index.formingTokens.back());
-				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_1)[0].c_str())); //первый индекс
-				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_0)[0].c_str())); //второй индекс
+				expression_1.push_back(index.formingTokens.back());	
+				//
+				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_1, false)[0].c_str())); //первый индекс
+				generator->createIntConstant(atoi(m_variablesTable->GetExpressionStack(expression_0, false)[0].c_str())); //второй индекс
 				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), 
 												     m_variablesTable->getType(m_tokens.end()[-7].value),
 													 m_variablesTable->getXDimention(m_tokens.end()[-7].value));				
