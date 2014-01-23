@@ -252,12 +252,11 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 		else 
 		if (currToken->formingTokens.size() == 2)
 		{
-			expressionStack.push_back(currToken->formingTokens.back().value);
+			expressionStack.push_back("--");
 			currToken = &currToken->formingTokens.front();
 		}
 		else
 		{
-
 			if (currToken->formingTokens.size() == 4)
 			{
 				nextTokens.push(&currToken->formingTokens[1]);
@@ -407,6 +406,32 @@ bool VariablesTable::IsAssignableArrayExpression(vector<Token> stack, Token *arr
 		else
 		{
 			if (getSize(arrayToken->value) != getSize(stack.back().value))
+			{
+				return false;
+			}
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool VariablesTable::IsAssignableIntBoolExpression(vector<Token> stack, Token *idToken)
+{
+	if (stack.size() == 1)
+	{
+		if (getType(idToken->value) != getType(stack.back().value))
+		{
+			if (getType(idToken->value) == "int" || getType(idToken->value) == "int") {
+				return false;
+			}
+		}
+		else
+		{
+			if (getSize(idToken->value) != getSize(stack.back().value))
 			{
 				return false;
 			}
