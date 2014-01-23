@@ -6,7 +6,6 @@
     <ClCompile Include="HLParser.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="Scanner.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="TablesReader.cpp" />
     <ClCompile Include="tinystr.cpp" />
@@ -26,7 +25,6 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="RuleName.h" />
-    <ClInclude Include="Scanner.h" />
     <ClInclude Include="SizeManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Symbol.h" />

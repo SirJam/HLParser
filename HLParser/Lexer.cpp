@@ -2,19 +2,81 @@
 #include "Lexer.h"
 
 Lexer::Lexer(const char *fileName, vector<Symbol> const& symbolTable)
-:scanner(fileName), tokenRecognizer(symbolTable) {}
+:tokenRecognizer(symbolTable) {
+	char ch;
+	char ch1;
+	bool mulcom = false;
+	bool sincom = false;
+	ifstream input(fileName);
 
-string Lexer::readNextWord()
+	lexemeBegin = 0;
+	forward = 0;
+	stringBuffer = "";
+	line = 0;
+	ch1 = input.get();
+	ch = ch1;
+	ch1 = input.get();
+	while (!input.eof()) {
+		if ((ch == '/') && (ch1 == '*')) {
+			mulcom = true;
+			ch1 = input.get();
+			if (!input.eof()){
+				ch = ch1;
+				ch1 = input.get();
+			}
+			continue;
+		}
+		if ((ch == '/') && (ch1 == '/')) {
+			sincom = true;
+			ch1 = input.get();
+			if (!input.eof()){
+				ch = ch1;
+				ch1 = input.get();
+			}
+			continue;
+		}
+		if ((ch == '\n') && (sincom == true)){
+			sincom = false;
+		}
+		if ((ch == '*') && (ch1 == '/')){
+			if (mulcom == true) {
+				mulcom = false;
+				ch1 = input.get();
+				if (!input.eof()){
+					ch = ch1;
+					ch1 = input.get();
+				}
+				continue;
+			}
+			else{
+				return;
+			}
+		}
+		if ((mulcom == false) && (sincom == false)) {
+			buffer.push_back(ch);
+		}
+		ch = ch1;
+		ch1 = input.get();
+	}
+	buffer.push_back(ch);
+	buffer.push_back(ch1);
+}
+
+string Lexer::GetNextWord()
 {
-	string word = "";
+	string stringBuffer = "";
 
 	bool readingDigitOrChar = false;
 	bool readingSymbols = false;
 
-	char ch = scanner.readCharacter();
+	char ch = buffer[lexemeBegin];
+	if (ch == '\n') {
+		line++;
+	}
 	if (isDigitOrChar(ch)) {
 		readingDigitOrChar = true;
-	} else {
+	}
+	else {
 		readingSymbols = true;
 	}
 
@@ -23,48 +85,80 @@ string Lexer::readNextWord()
 			break;
 		}
 
-		if (isSpecialCharacter(ch) && !word.length()) {
-			word.push_back(ch);
+		if (isSpecialCharacter(ch) && (stringBuffer.length() == 0)) {
+			stringBuffer.push_back(ch);
 			break;
 		}
 
 		if (isEmptyCharacter(ch)) {
-			if (word.length()) {
+			if (stringBuffer.length() != 0) {
 				break;
 			}
 		}
 
 		if (isDigitOrChar(ch) && readingDigitOrChar) {
-			word.push_back(ch);
-		} else if (!isDigitOrChar(ch) && readingSymbols) {
-			word.push_back(ch);
-		} else {
-			scanner.returnCharacter();
+			stringBuffer.push_back(ch);
+		}
+		else if (!isDigitOrChar(ch) && readingSymbols) {
+			stringBuffer.push_back(ch);
+		}
+		else {
+			if (lexemeBegin > 0)
+			{
+				lexemeBegin--;
+				forward--;
+			}
+			char returnedChar = buffer[forward];
+			if (returnedChar == '\n') {
+				line--;
+			}
 			break;
 		}
 
-		ch = scanner.readCharacter();
+		lexemeBegin = forward;
+		forward++;
+		ch = buffer[lexemeBegin];
+		if (ch == '\n') {
+			line++;
+		}
 	}
-	return word;
+	return stringBuffer;
 }
 
 Token Lexer::nextToken()
 {
-	string word = readNextWord();
+	string stringBuffer = GetNextWord();
 
-	Symbol tokenType = tokenRecognizer.TokenTypeByTokensValue(word);
-	Token token = Token(tokenType, word, scanner.currentLine);
+	Symbol tokenType = tokenRecognizer.TokenTypeByTokensValue(stringBuffer);
+	Token token = Token(tokenType, stringBuffer, line);
 
 	return token;
 }
 
 bool Lexer::nextTokenExists()
 {
-	char ch = scanner.readCharacter();
-	while (isEmptyCharacter(ch)) {
-		ch = scanner.readCharacter();
+	lexemeBegin = forward;
+	forward++;
+	char ch = buffer[lexemeBegin];
+	if (ch == '\n') {
+		line++;
+		lexemeBegin = forward;
+		forward++;
+		ch = buffer[lexemeBegin];
 	}
-	scanner.returnCharacter();
+	while (isEmptyCharacter(ch)) {
+		lexemeBegin = forward;
+		forward++;
+		ch = buffer[lexemeBegin];
+		if (ch == '\n') {
+			line++;
+		}
+	}
+
+	char returnedChar = buffer[lexemeBegin];
+	if (returnedChar == '\n') {
+		line--;
+	}
 
 	return ch != EOF;
 }
@@ -86,21 +180,21 @@ bool Lexer::isDigitOrChar(char ch)
 
 bool Lexer::isSpecialCharacter(char ch)
 {
-	char nextCh = scanner.peekCharacter();
+	char nextCh = buffer[forward];
 	if (ch == '(' || ch == ')' ||
-		ch == '{' || ch == '}' || 
-		ch == '[' || ch == ']' || 
-		ch == ';' || ch == '"') 
+		ch == '{' || ch == '}' ||
+		ch == '[' || ch == ']' ||
+		ch == ';' || ch == '"')
 	{
 		return true;
-	} 
-	else 
+	}
+	else
 	{
-		if (ch == '-' || ch == '!') 
+		if (ch == '-' || ch == '!')
 		{
 			return (nextCh != '=');
 		}
-		else 
+		else
 		{
 			return false;
 		}
