@@ -1,24 +1,6 @@
 main
 {
-    int a;
-    int b;
-    a = 9;
-    b = 3;
-    if (a > b)
-    {
-        if (a == 9)
-        {
-            a = 5;
-        }
-        else
-        {
-            a = 3;
-        }
-    }
-    else
-    {
-        a = 0;
-    }
- 
+    int c;
+    c = 3 + 4 + (55 * 4 - 100 * 2) + 3 * 4;
   return 0;
 }
