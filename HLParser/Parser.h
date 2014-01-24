@@ -33,7 +33,6 @@ private:
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
 	vector<string> createdIfExpressionsLabels;
-	vector<string> createdElseExpressionsLabels;
 	stack<string> whileLabels;
 
 	VariablesTable *m_variablesTable;

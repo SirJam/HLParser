@@ -20,6 +20,9 @@ public:
 	void createMultiplyOperation();
 	void createDivideOperation();
 
+	void negateResult();
+	void createExpressionInversion();
+
 	void createVariableSpace(int const space);
 
 	void createIntVariable(int const offset, string const type, int x = 0);
@@ -35,8 +38,7 @@ public:
 
 	void createIfExpressionStartPart(string &falseLabel);
 	void createIfExpressionEndPart(string falseLabel);
-	//void createElseExpressionStartPart(string &label);
-	//void createElseExpressionEndPart(string label);
+	string createIfExpressionMiddlePart(string &label);
 
 	string createWhileExpressionStartLabel(string &label);
 	void createWhileExpressionStartPart(string label);

@@ -72,16 +72,11 @@ void Parser::Shift(Action action, Token token)
 	m_states.push_back(action.target);
 	lastAction = 1;	
 
-	/*if (m_tokens.back().symbol.name == ")") {
-		if (m_tokens.end()[-2].symbol.name == RuleName::EXPRESSION_0() &&
-			m_tokens.end()[-3].symbol.name == "(" &&
-			m_tokens.end()[-4].symbol.name == RuleName::IF()) {			
-			cout << "if_st\n";
-			string falseLabel;	
-			generator->createIfExpressionStartPart(falseLabel);
-			createdIfExpressionsLabels.push_back(falseLabel);
-		}
-	}*/
+	if (m_tokens.back().symbol.name == RuleName::ELSE()) {		
+		string miggleLabel = generator->createIfExpressionMiddlePart(createdIfExpressionsLabels.back());	
+		createdIfExpressionsLabels.pop_back();
+		createdIfExpressionsLabels.push_back(miggleLabel);
+	}
 }
 
 void Parser::parseExpression(vector<string> stack)
@@ -99,6 +94,12 @@ void Parser::parseExpression(vector<string> stack)
 		}
 		else if (stack[i] == "/") {
 			generator->createDivideOperation();
+		}
+		else if (stack[i] == "--") {
+			generator->negateResult();
+		}
+		else if (stack[i] == "!") {
+			generator->createExpressionInversion();
 		}
 		else if (isdigit(stack[i][0])) {
 			generator->createIntConstant(atoi(stack[i].c_str()));
@@ -137,12 +138,13 @@ void Parser::computeProduction(Production *production)
 	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
 	{
 		m_variablesTable->TryToRegisterVariable(m_tokens);				
-	}
+	}	
 	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
 	{
+		m_tokens;
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens, true);				
 		parseExpression(stack);	
-	}
+	}	
 	else if (symbol.name == RuleName::DEFINITION())
 	{
 		int size = 0;
@@ -225,7 +227,7 @@ void Parser::computeProduction(Production *production)
 			generator->createIfExpressionStartPart(falseLabel);
 			createdIfExpressionsLabels.push_back(falseLabel);
 		}
-		if (m_tokens.end()[-8].value == "while")
+		else if (m_tokens.end()[-8].value == "while")
 		{		
 			string startLabel;	
 			string finLabel = generator->createWhileExpressionStartLabel(startLabel);
@@ -309,18 +311,18 @@ void Parser::computeProduction(Production *production)
 		}		
 	}
 	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {
+		m_tokens;
 		if (!createdIfExpressionsLabels.empty()) {
 			generator->createIfExpressionEndPart(createdIfExpressionsLabels.back());
 			createdIfExpressionsLabels.pop_back();
 			cout << "if_en\n";
 		}
 	}
-	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {			
-		cout << "if_else\n";
+	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {	
+		m_tokens;
+		cout << "if_marker\n";
 	}
 }
-
-
 
 bool Parser::Reduce(Action action)
 {
