@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
 		parser.getNextToken(lastToken);
 	}
 
-	generator.createASMFile("input.asm");
+	generator.MakeASM("input.asm");
 	ostringstream paramStream;
 	paramStream << "GoAsm.exe ";
 	paramStream << "input.asm";

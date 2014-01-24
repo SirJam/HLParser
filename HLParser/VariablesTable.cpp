@@ -430,23 +430,19 @@ bool VariablesTable::IsAssignableIntBoolExpression(vector<string> stack, Token *
 {
 	if (stack.size() == 1)
 	{
-		if (getType(idToken->lexeme) == "int" && getType(stack.back()) == "int")
+		if (getType(idToken->lexeme) == "int" && 
+			(getType(stack.back()) == "int_double_array" ||
+			getType(stack.back()) == "bool_double_array" ||
+			getType(stack.back()) == "int_array" ||
+			getType(stack.back()) == "bool_array"))
 		{
-			return true;
+			return false;
 		}
-		if (getType(idToken->lexeme) == "int" && getType(stack.back()) == "bool")
-		{
-			return true;
-		}
-		if (getType(idToken->lexeme) == "bool" && getType(stack.back()) == "bool")
-		{
-			return true;
-		}
-		if (getType(idToken->lexeme) == "bool" && getType(stack.back()) == "int")
-		{
-			return true;
-		}
-		if (getSize(idToken->lexeme) != getSize(stack.back()))
+		if (getType(idToken->lexeme) == "bool" && 
+			(getType(stack.back()) == "int_double_array" ||
+			getType(stack.back()) == "bool_double_array" ||
+			getType(stack.back()) == "int_array" ||
+			getType(stack.back()) == "bool_array"))
 		{
 			return false;
 		}

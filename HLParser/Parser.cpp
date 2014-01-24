@@ -73,7 +73,7 @@ void Parser::Shift(Action action, Token token)
 	lastAction = 1;	
 
 	if (m_tokens.back().symbol.m_term == RuleName::ELSE()) {		
-		string miggleLabel = generator->createIfExpressionMiddlePart(createdIfExpressionsLabels.back());	
+		string miggleLabel = generator->WriteIfMiddle(createdIfExpressionsLabels.back());	
 		createdIfExpressionsLabels.pop_back();
 		createdIfExpressionsLabels.push_back(miggleLabel);
 	}
@@ -84,48 +84,48 @@ void Parser::parseExpression(vector<string> stack)
 	for (int i = 0; i < stack.size(); i++)
 	{
 		if (stack[i] == "+") {
-			generator->createAddOperation();
+			generator->AddToAsm();
 		}
 		else if (stack[i] == "-") {
-			generator->createSubstractOperation();
+			generator->SubToAsm();
 		}
 		else if (stack[i] == "*") {
-			generator->createMultiplyOperation();
+			generator->MulToAsm();
 		}
 		else if (stack[i] == "/") {
-			generator->createDivideOperation();
+			generator->DivToAsm();
 		}
 		else if (stack[i] == "--") {
-			generator->negateResult();
+			generator->NagativVal();
 		}
 		else if (stack[i] == "!") {
-			generator->createExpressionInversion();
+			generator->InverseExpression();
 		}
 		else if (isdigit(stack[i][0])) {
-			generator->createIntConstant(atoi(stack[i].c_str()));
+			generator->WriteIntConst(atoi(stack[i].c_str()));
 		}
 		else if (stack[i] == ">" || stack[i] == "<" || 
 					stack[i] == ">=" || stack[i] == "<=" ||
 					stack[i] == "==" || stack[i] == "!=") {
-						generator->createRelExpression(stack[i]);
+						generator->WriteRelation(stack[i]);
 		}
 		else if (stack[i] == "&&") {
-			generator->applyAndExpression();
+			generator->WriteAnd();
 		}
 		else if (stack[i] == "||") {
-			generator->applyOrExpression();
+			generator->WriteOr();
 		}
 		else if (stack[i] == "TRUE") {
-			generator->createIntConstant(1);
+			generator->WriteIntConst(1);
 		}
 		else if (stack[i] == "FALSE") {
-			generator->createIntConstant(0);
+			generator->WriteIntConst(0);
 		}
 		else { //identifier
 			int offset = m_variablesTable->getOffset(stack[i]);
 			string type = m_variablesTable->getType(stack[i]);
 			int x = m_variablesTable->getXDimention(stack[i]);
-			generator->createIntVariable(offset, type, x);
+			generator->WriteIntVar(offset, type, x);
 		}
 	}
 }
@@ -155,7 +155,7 @@ void Parser::computeProduction(Production *production)
 				size = size + var.m_size;
 			}
 		}		
-		generator->createVariableSpace(size); //allocate space
+		generator->AllocateSpace(size); //allocate space
 	}
 	else if (symbol.m_term == RuleName::EXPRESSION_0())
 	{		
@@ -167,13 +167,13 @@ void Parser::computeProduction(Production *production)
 			parseExpression(ifCondition);
 
 			string falseLabel;	
-			generator->createIfExpressionStartPart(falseLabel);
+			generator->WriteIfStart(falseLabel);
 			createdIfExpressionsLabels.push_back(falseLabel);
 		}
 		else if (m_tokens.end()[-8].lexeme == "while")
 		{		
 			string startLabel;	
-			string finLabel = generator->createWhileExpressionStartLabel(startLabel);
+			string finLabel = generator->WriteWhileStartLabel(startLabel);
 			whileLabels.push(finLabel);	
 			whileLabels.push(startLabel);
 
@@ -182,7 +182,7 @@ void Parser::computeProduction(Production *production)
 			vector<string> whileCondition = (m_variablesTable->GetExpressionStack(expression_0, false));
 			parseExpression(whileCondition);
 			
-			generator->createWhileExpressionStartPart(finLabel);
+			generator->WriteWhileStartPart(finLabel);
 								
 		}
 	}
@@ -197,7 +197,7 @@ void Parser::computeProduction(Production *production)
 				size = size + var.m_size;
 			}
 		}				
-		generator->createProgramEnd(size);
+		generator->WriteProgramEnd(size);
 	}
 	else if (symbol.m_term == RuleName::STATEMENT()) // programm end
 	{	
@@ -211,7 +211,7 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-5].symbol.m_term == RuleName::WRITE())
 		{
-			generator->createPrintInteger();
+			generator->IntToConsole();
 		}
 		if (m_tokens.end()[-5].symbol.m_term == RuleName::READ())
 		{
@@ -219,7 +219,7 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-3].symbol.m_term == "=" && m_tokens.end()[-4].symbol.m_term != "]")
 		{			
-			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].lexeme), m_variablesTable->getType(m_tokens.end()[-4].lexeme));
+			generator->WriteAssignment(m_variablesTable->getOffset(m_tokens.end()[-4].lexeme), m_variablesTable->getType(m_tokens.end()[-4].lexeme));
 		}
 		if (m_tokens.end()[-3].symbol.m_term == "=" && m_tokens.end()[-4].symbol.m_term == "]")//либо одномерный, либо 2мерный массив
 		{			
@@ -229,7 +229,7 @@ void Parser::computeProduction(Production *production)
 				vector<Token> expression_0;
 				expression_0.push_back(index.nodes.back());
 				parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
-				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].lexeme), m_variablesTable->getType(m_tokens.end()[-7].lexeme));				
+				generator->WriteAssignment(m_variablesTable->getOffset(m_tokens.end()[-7].lexeme), m_variablesTable->getType(m_tokens.end()[-7].lexeme));				
 			}
 			else if (index.nodes.size() == 3) //двумерный массив
 			{
@@ -238,7 +238,7 @@ void Parser::computeProduction(Production *production)
 				expression_1.push_back(index.nodes.back());	
 				parseExpression(m_variablesTable->GetExpressionStack(expression_1, false));
 				parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
-				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].lexeme), 
+				generator->WriteAssignment(m_variablesTable->getOffset(m_tokens.end()[-7].lexeme), 
 												     m_variablesTable->getType(m_tokens.end()[-7].lexeme),
 													 m_variablesTable->getXDimention(m_tokens.end()[-7].lexeme));				
 			}
@@ -250,13 +250,13 @@ void Parser::computeProduction(Production *production)
 			whileLabels.pop();
 			l2 = whileLabels.top();
 			whileLabels.pop();
-			generator->createWhileExpressionEndPart(l1, l2);
+			generator->WriteWhileEndPart(l1, l2);
 		}		
 	}
 	else if (symbol.m_term == RuleName::IF_CONSTRUCTION()) {
 		m_tokens;
 		if (!createdIfExpressionsLabels.empty()) {
-			generator->createIfExpressionEndPart(createdIfExpressionsLabels.back());
+			generator->WriteIfEnd(createdIfExpressionsLabels.back());
 			createdIfExpressionsLabels.pop_back();
 		}
 	}
