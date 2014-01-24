@@ -37,19 +37,19 @@ void TablesReader::GetSymbol(TiXmlElement* pElement)
 	{
 		if (pAttrib->NameTStr() == "Index")
 		{
-			symbol.index = pAttrib->IntValue();
+			symbol.m_index = pAttrib->IntValue();
 		} 
 		else
 		{
 			if (pAttrib->NameTStr() == "Name")
 			{
-				symbol.name = pAttrib->Value();
+				symbol.m_term = pAttrib->Value();
 			}
 			else
 			{
 				if (pAttrib->NameTStr() == "Type")
 				{
-					symbol.type = pAttrib->IntValue();
+					symbol.m_type = pAttrib->IntValue();
 				}
 			}
 		}

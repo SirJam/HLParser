@@ -24,19 +24,19 @@ Parser::Parser(Generator *generator)
 Token Parser::createTokenEOF()
 {
 	Symbol symbol;
-	symbol.index = 0;
-	symbol.name = RuleName::EOF_RULE();
-	symbol.type = 3;
+	symbol.m_index = 0;
+	symbol.m_term = RuleName::EOF_RULE();
+	symbol.m_type = 3;
 
-	int lineNumber = m_tokens.size() ? m_tokens.back().lineNumber : 0;
+	int line = m_tokens.size() ? m_tokens.back().line : 0;
 
-	return Token(symbol, RuleName::EOF_RULE(), lineNumber);
+	return Token(symbol, RuleName::EOF_RULE(), line);
 }
 
 Symbol Parser::symbolWithIndex(int index)
 {
 	for (Symbol symbol : *m_symbolsTable) {
-		if (symbol.index == index) return symbol;
+		if (symbol.m_index == index) return symbol;
 	}
 }
 
@@ -45,7 +45,7 @@ void Parser::getNextToken(Token const& token)
 	//printState(token);
 	for (vector<Action>::iterator it = m_actionsTable->begin(); it != m_actionsTable->end(); it++) {
 		Action *action = &(*it);
-		if (action->stateIndex == m_states.back() && action->symbolIndex == token.symbol.index) {
+		if (action->stateIndex == m_states.back() && action->symbolIndex == token.symbol.m_index) {
 			switch (action->type) {
 				case 1: {
 					Shift(*action, token);
@@ -72,7 +72,7 @@ void Parser::Shift(Action action, Token token)
 	m_states.push_back(action.target);
 	lastAction = 1;	
 
-	if (m_tokens.back().symbol.name == RuleName::ELSE()) {		
+	if (m_tokens.back().symbol.m_term == RuleName::ELSE()) {		
 		string miggleLabel = generator->createIfExpressionMiddlePart(createdIfExpressionsLabels.back());	
 		createdIfExpressionsLabels.pop_back();
 		createdIfExpressionsLabels.push_back(miggleLabel);
@@ -135,17 +135,17 @@ void Parser::computeProduction(Production *production)
 	Symbol symbol = symbolWithIndex(production->nonTerminalIndex);	
 	
 	Token *token = &m_tokens.back();
-	if (symbol.name == RuleName::IDENTIFIER_DEFINITION())
+	if (symbol.m_term == RuleName::IDENTIFIER_DEFINITION())
 	{
 		m_variablesTable->TryToRegisterVariable(m_tokens);				
 	}	
-	else if (symbol.name == RuleName::EXPRESSION_AND_SYMBOL())
+	else if (symbol.m_term == RuleName::EXPRESSION_AND_SYMBOL())
 	{
 		m_tokens;
 		vector<string> stack = m_variablesTable->GetExpressionStack(m_tokens, true);				
 		parseExpression(stack);	
 	}	
-	else if (symbol.name == RuleName::DEFINITION())
+	else if (symbol.m_term == RuleName::DEFINITION())
 	{
 		int size = 0;
 		if (m_variablesTable->m_variablesTable ->size()) 
@@ -157,53 +157,9 @@ void Parser::computeProduction(Production *production)
 		}		
 		generator->createVariableSpace(size); //allocate space
 	}
-	else if (symbol.name == RuleName::EXPRESSION_3())
-	{
-		Token *addopToken = &m_tokens.end()[-2];
-		Token *firstOperand = &m_tokens.end()[-3];
-		Token *secondOperand = &m_tokens.end()[-1];			
-		// Checking operand types
-
-		string operation = addopToken->value;	
-	}
-	else if (symbol.name == RuleName::EXPRESSION_4()) // + -
-	{
-		if (production->handles.size() == 3) 
-		{			
-			Token *addopToken = &m_tokens.end()[-2];
-			Token *firstOperand = &m_tokens.end()[-3];
-			Token *secondOperand = &m_tokens.end()[-1];			
-			// Checking operand types
-
-			string operation = addopToken->value;
-			
-			if (operation == "+") 
-			{
-			}
-			else if (operation == "-")
-			{
-			}
-		}
-	}	
-	else if (symbol.name == RuleName::EXPRESSION_5()) 
-	{
-		Token *addopToken = &m_tokens.end()[-2];
-		Token *firstOperand = &m_tokens.end()[-3];
-		Token *secondOperand = &m_tokens.end()[-1];			
-		// Checking operand types
-
-		string operation = addopToken->value;
-			
-		if (operation == "*") 
-		{
-		}
-		else if (operation == "/")
-		{
-		}
-	}
-	else if (symbol.name == RuleName::EXPRESSION_0())
+	else if (symbol.m_term == RuleName::EXPRESSION_0())
 	{		
-		if (m_tokens.end()[-8].value == "if")
+		if (m_tokens.end()[-8].lexeme == "if")
 		{		
 			vector<Token> expression_0;
 			expression_0.push_back(m_tokens.end()[-6]);
@@ -214,7 +170,7 @@ void Parser::computeProduction(Production *production)
 			generator->createIfExpressionStartPart(falseLabel);
 			createdIfExpressionsLabels.push_back(falseLabel);
 		}
-		else if (m_tokens.end()[-8].value == "while")
+		else if (m_tokens.end()[-8].lexeme == "while")
 		{		
 			string startLabel;	
 			string finLabel = generator->createWhileExpressionStartLabel(startLabel);
@@ -230,7 +186,7 @@ void Parser::computeProduction(Production *production)
 								
 		}
 	}
-	else if (symbol.name == RuleName::GOAL()) // programm end
+	else if (symbol.m_term == RuleName::GOAL()) // programm end
 	{
 		//clear stack
 		int size = 0;
@@ -243,51 +199,51 @@ void Parser::computeProduction(Production *production)
 		}				
 		generator->createProgramEnd(size);
 	}
-	else if (symbol.name == RuleName::STATEMENT()) // programm end
+	else if (symbol.m_term == RuleName::STATEMENT()) // programm end
 	{	
-		if (m_tokens.at(m_tokens.size() - 4).symbol.name == RuleName::IDENTIFIER())
+		if (m_tokens.at(m_tokens.size() - 4).symbol.m_term == RuleName::IDENTIFIER())
 		{
 			m_variablesTable->CheckExistingOfVariable(m_tokens, true);			
 		}
-		if (m_tokens.at(m_tokens.size() - 7).symbol.name == RuleName::IDENTIFIER())
+		if (m_tokens.at(m_tokens.size() - 7).symbol.m_term == RuleName::IDENTIFIER())
 		{
 			m_variablesTable->CheckExistingOfVariable(m_tokens, false);
 		}
-		if (m_tokens.end()[-5].symbol.name == RuleName::WRITE())
+		if (m_tokens.end()[-5].symbol.m_term == RuleName::WRITE())
 		{
 			generator->createPrintInteger();
 		}
-		if (m_tokens.end()[-5].symbol.name == RuleName::READ())
+		if (m_tokens.end()[-5].symbol.m_term == RuleName::READ())
 		{
 			//cout << "read" << endl;
 		}
-		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name != "]")
+		if (m_tokens.end()[-3].symbol.m_term == "=" && m_tokens.end()[-4].symbol.m_term != "]")
 		{			
-			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].value), m_variablesTable->getType(m_tokens.end()[-4].value));
+			generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-4].lexeme), m_variablesTable->getType(m_tokens.end()[-4].lexeme));
 		}
-		if (m_tokens.end()[-3].symbol.name == "=" && m_tokens.end()[-4].symbol.name == "]")//либо одномерный, либо 2мерный массив
+		if (m_tokens.end()[-3].symbol.m_term == "=" && m_tokens.end()[-4].symbol.m_term == "]")//либо одномерный, либо 2мерный массив
 		{			
 			Token index = m_tokens.end()[-5];
-			if (index.formingTokens.size() == 1) //одномерный массив
+			if (index.nodes.size() == 1) //одномерный массив
 			{
 				vector<Token> expression_0;
-				expression_0.push_back(index.formingTokens.back());
+				expression_0.push_back(index.nodes.back());
 				parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
-				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), m_variablesTable->getType(m_tokens.end()[-7].value));				
+				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].lexeme), m_variablesTable->getType(m_tokens.end()[-7].lexeme));				
 			}
-			else if (index.formingTokens.size() == 3) //двумерный массив
+			else if (index.nodes.size() == 3) //двумерный массив
 			{
 				vector<Token> expression_0, expression_1;
-				expression_0.push_back(index.formingTokens.front());
-				expression_1.push_back(index.formingTokens.back());	
+				expression_0.push_back(index.nodes.front());
+				expression_1.push_back(index.nodes.back());	
 				parseExpression(m_variablesTable->GetExpressionStack(expression_1, false));
 				parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
-				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].value), 
-												     m_variablesTable->getType(m_tokens.end()[-7].value),
-													 m_variablesTable->getXDimention(m_tokens.end()[-7].value));				
+				generator->createAssignmentOperation(m_variablesTable->getOffset(m_tokens.end()[-7].lexeme), 
+												     m_variablesTable->getType(m_tokens.end()[-7].lexeme),
+													 m_variablesTable->getXDimention(m_tokens.end()[-7].lexeme));				
 			}
 		}		
-		if (m_tokens.end()[-7].symbol.name == RuleName::WHILE())
+		if (m_tokens.end()[-7].symbol.m_term == RuleName::WHILE())
 		{
 			string l1, l2;
 			l1 = whileLabels.top();
@@ -297,17 +253,12 @@ void Parser::computeProduction(Production *production)
 			generator->createWhileExpressionEndPart(l1, l2);
 		}		
 	}
-	else if (symbol.name == RuleName::IF_CONSTRUCTION()) {
+	else if (symbol.m_term == RuleName::IF_CONSTRUCTION()) {
 		m_tokens;
 		if (!createdIfExpressionsLabels.empty()) {
 			generator->createIfExpressionEndPart(createdIfExpressionsLabels.back());
 			createdIfExpressionsLabels.pop_back();
-			cout << "if_en\n";
 		}
-	}
-	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {	
-		m_tokens;
-		cout << "if_marker\n";
 	}
 }
 
@@ -319,11 +270,11 @@ bool Parser::Reduce(Action action)
 			//realize production
 			computeProduction(production);
 			// Removing right part of the production from stack
-			vector<Token> formingTokens;
+			vector<Token> nodes;
 			for (vector<int>::reverse_iterator rit = production->handles.rbegin(); rit != production->handles.rend(); rit++) {
 				int symbolIndex = (*rit);				
-				if (symbolIndex == m_tokens.back().symbol.index) {
-					formingTokens.push_back(m_tokens.back());
+				if (symbolIndex == m_tokens.back().symbol.m_index) {
+					nodes.push_back(m_tokens.back());
 					m_tokens.pop_back();
 					m_states.pop_back();
 				}
@@ -332,23 +283,23 @@ bool Parser::Reduce(Action action)
 			Symbol symbolNonTerminal = symbolWithIndex(production->nonTerminalIndex);
 
 			int lineNum = 0;
-			for (vector<Token>::iterator it3 = formingTokens.begin(); it3 != formingTokens.end(); it3++) 
+			for (vector<Token>::iterator it3 = nodes.begin(); it3 != nodes.end(); it3++) 
 			{
-				int tokenLineNumber = it3->lineNumber;
-				if (tokenLineNumber) 
+				int tokenline = it3->line;
+				if (tokenline) 
 				{
-					lineNum = tokenLineNumber;
+					lineNum = tokenline;
 				}
 			}
 
 			Token nonTerminalToken(symbolNonTerminal, RuleName::NONTERMINAL(), lineNum);
-			nonTerminalToken.formingTokens = formingTokens;
+			nonTerminalToken.nodes = nodes;
 			m_tokens.push_back(nonTerminalToken);
 			// Finding next state
 			for (vector<Action>::iterator it4 = m_actionsTable->begin(); it4 != m_actionsTable->end(); it4++) 
 			{
 				Action *currentAction = &(*it4);
-				if (currentAction->stateIndex == m_states.back() && currentAction->symbolIndex == m_tokens.back().symbol.index && currentAction->type == 3) 
+				if (currentAction->stateIndex == m_states.back() && currentAction->symbolIndex == m_tokens.back().symbol.m_index && currentAction->type == 3) 
 				{
 					m_states.push_back(currentAction->target);
 					break;
@@ -372,9 +323,9 @@ void Parser::HandleError(Token token)
 	for (Action action : *m_actionsTable) {
 		if (action.stateIndex == m_states.back()) {
 			expectedValues += "    '";
-			expectedValues += symbolWithIndex(action.symbolIndex).name;
+			expectedValues += symbolWithIndex(action.symbolIndex).m_term;
 			expectedValues += "'\n";
 		}
 	}
-	ErrorHandler::FailedWithTokenError(expectedValues, token.value, token.lineNumber);
+	ErrorHandler::FailedWithTokenError(expectedValues, token.lexeme, token.line);
 }
