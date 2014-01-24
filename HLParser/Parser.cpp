@@ -164,20 +164,7 @@ void Parser::computeProduction(Production *production)
 		Token *secondOperand = &m_tokens.end()[-1];			
 		// Checking operand types
 
-		string operation = addopToken->value;
-			
-		if (operation == ">") 
-		{
-		}
-		else if (operation == "<")
-		{
-		}
-		else if (operation == ">=")
-		{
-		}
-		else if (operation == "<=")
-		{
-		}
+		string operation = addopToken->value;	
 	}
 	else if (symbol.name == RuleName::EXPRESSION_4()) // + -
 	{
