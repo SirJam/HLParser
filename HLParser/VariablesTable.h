@@ -15,8 +15,8 @@ private:
 	Token *GetLastVariable(Token *token);
 	void GetBodyWithoutTail(Token & token);
 	void CompareTypes(vector<Token> stack, vector<string> rightPart);
-	bool IsAssignableArrayExpression(vector<Token> stack, Token *arrayToken);
-	bool IsAssignableIntBoolExpression(vector<Token> stack, Token *idToken);
+	bool IsAssignableArrayExpression(vector<string> stack, Token *arrayToken);
+	bool IsAssignableIntBoolExpression(vector<string> stack, Token *idToken);
 
 	Token *m_tempToken;
 public:

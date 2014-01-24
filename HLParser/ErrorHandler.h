@@ -7,9 +7,6 @@ using namespace std;
 class ErrorHandler
 {
 public:
-	static void failWithErrorCode(int const code, string const& data, int const lineNumber);
-	static void failWithErrorCode(int const code, string const& data1, string const& data2, int const lineNumber);
-
 	static void FailedWithTypeError(string type, int line)
 	{
 		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Type '" + type + "' is not allowed!\n");
@@ -30,6 +27,10 @@ public:
 	{
 		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "'" + name + "' array can only assign it an array of similar type and size!\n");
 	}
+	static void FailedWithNotAssignableIntBoolExpression(string name, int line)
+	{
+		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "'" + name + "' variable can only be assigned to variable of similar type and size!\n");
+	}
 	static void FailedWithTokenError(string expectedValues, string name, int line)
 	{
 		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "\n  --==Syntax error==--\n\n" + "Expected tokens: \n\n" + expectedValues + "\nReceived token: '" + name + "'!\n");
@@ -47,9 +48,4 @@ public:
 		out << "Error at line " << line << endl;
 		return out.str();
 	}
-private:
-	static void failWithError(string const& error, int const lineNumber);
-
-	static void failWithScannerError(int const code, string const& data1, string const& data2, int const lineNumber);
-	static void failWithParserError(int const code, string const& data1, string const& data2, int const lineNumber);
 };

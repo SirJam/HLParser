@@ -157,63 +157,6 @@ void Parser::computeProduction(Production *production)
 		}		
 		generator->createVariableSpace(size); //allocate space
 	}
-	else if (symbol.name == RuleName::EXPRESSION_3())
-	{
-		Token *addopToken = &m_tokens.end()[-2];
-		Token *firstOperand = &m_tokens.end()[-3];
-		Token *secondOperand = &m_tokens.end()[-1];			
-		// Checking operand types
-
-		string operation = addopToken->value;
-			
-		if (operation == ">") 
-		{
-		}
-		else if (operation == "<")
-		{
-		}
-		else if (operation == ">=")
-		{
-		}
-		else if (operation == "<=")
-		{
-		}
-	}
-	else if (symbol.name == RuleName::EXPRESSION_4()) // + -
-	{
-		if (production->handles.size() == 3) 
-		{			
-			Token *addopToken = &m_tokens.end()[-2];
-			Token *firstOperand = &m_tokens.end()[-3];
-			Token *secondOperand = &m_tokens.end()[-1];			
-			// Checking operand types
-
-			string operation = addopToken->value;
-			
-			if (operation == "+") 
-			{
-			}
-			else if (operation == "-")
-			{
-			}
-		}
-	}	
-	else if (symbol.name == RuleName::EXPRESSION_5()) 
-	{
-		Token *addopToken = &m_tokens.end()[-2];
-		Token *firstOperand = &m_tokens.end()[-3];
-		Token *secondOperand = &m_tokens.end()[-1];			
-		// Checking operand types
-
-		string operation = addopToken->value;
-			
-		if (operation == "*") 
-		{
-		}
-		else if (operation == "/")
-		{
-		}
-	}
 	else if (symbol.name == RuleName::EXPRESSION_0())
 	{		
 		if (m_tokens.end()[-8].value == "if")
@@ -315,12 +258,7 @@ void Parser::computeProduction(Production *production)
 		if (!createdIfExpressionsLabels.empty()) {
 			generator->createIfExpressionEndPart(createdIfExpressionsLabels.back());
 			createdIfExpressionsLabels.pop_back();
-			cout << "if_en\n";
 		}
-	}
-	else if (symbol.name == RuleName::ELSE_CONSTRUCTION()) {	
-		m_tokens;
-		cout << "if_marker\n";
 	}
 }
 

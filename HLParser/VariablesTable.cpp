@@ -68,7 +68,7 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		else
 		{
 			help_type = type + "_double_array";
-			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) * stoi(factorToken.formingTokens.front().formingTokens.back().value);			
+			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) * stoi(factorToken.formingTokens.front().formingTokens.back().value);
 			xDimention = stoi(factorToken.formingTokens.back().formingTokens.back().value);
 		}
 	}
@@ -187,18 +187,18 @@ string VariablesTable::getType(string varName)
 int VariablesTable::getXDimention(string varName)
 {
 	int x = 0;
-	
-	if (m_variablesTable ->size()) 
+
+	if (m_variablesTable->size())
 	{
-		for (Variable var : *m_variablesTable )
-		{			
+		for (Variable var : *m_variablesTable)
+		{
 			if (var.m_name == varName)
-			{			
+			{
 				x = var.m_xDimension;
 				break;
 			}
 		}
-	}	
+	}
 	return x;
 }
 
@@ -249,7 +249,7 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 		{
 			currToken = &currToken->formingTokens.back();
 		}
-		else 
+		else
 		if (currToken->formingTokens.size() == 2)
 		{
 			if (currToken->formingTokens.back().value == "!")
@@ -302,7 +302,7 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 					}
 					else if (currToken->formingTokens.front().formingTokens.size() == 3)
 					{
-						if (currToken->formingTokens.size() == 3) 
+						if (currToken->formingTokens.size() == 3)
 						{
 							expressionStack.push_back(currToken->formingTokens[1].value);
 							nextTokens.push(&currToken->formingTokens.back());
@@ -382,41 +382,37 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 	if (!isElementOfArray)
 	{
 		string type = getType(leftPart->value);
-		if (type == "int")
+		if (type == "int" || type == "bool")
 		{
-
+			if (!IsAssignableIntBoolExpression(rightPart, leftPart))
+			{
+				ErrorHandler::FailedWithNotAssignableIntBoolExpression(leftPart->value, leftPart->lineNumber);
+			}
 		}
 		else
 		{
-			if (type == "bool")
+			if (type == "int_array" || type == "bool_array" || type == "int_double_array" || type == "bool_double_array")
 			{
-
-			}
-			else
-			{
-				if (type == "int_array" || type == "bool_array" || type == "int_double_array" || type == "bool_double_array")
+				if (!IsAssignableArrayExpression(rightPart, leftPart))
 				{
-					if (!IsAssignableArrayExpression(stack, leftPart))
-					{
-						ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->value, leftPart->lineNumber);
-					}
+					ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->value, leftPart->lineNumber);
 				}
 			}
 		}
 	}
 }
 
-bool VariablesTable::IsAssignableArrayExpression(vector<Token> stack, Token *arrayToken)
+bool VariablesTable::IsAssignableArrayExpression(vector<string> stack, Token *arrayToken)
 {
 	if (stack.size() == 1)
 	{
-		if (getType(arrayToken->value) != getType(stack.back().value))
+		if (getType(arrayToken->value) != getType(stack.back()))
 		{
 			return false;
 		}
 		else
 		{
-			if (getSize(arrayToken->value) != getSize(stack.back().value))
+			if (getSize(arrayToken->value) != getSize(stack.back()))
 			{
 				return false;
 			}
@@ -430,27 +426,30 @@ bool VariablesTable::IsAssignableArrayExpression(vector<Token> stack, Token *arr
 	return true;
 }
 
-bool VariablesTable::IsAssignableIntBoolExpression(vector<Token> stack, Token *idToken)
+bool VariablesTable::IsAssignableIntBoolExpression(vector<string> stack, Token *idToken)
 {
 	if (stack.size() == 1)
 	{
-		if (getType(idToken->value) != getType(stack.back().value))
+		if (getType(idToken->value) == "int" && getType(stack.back()) == "int")
 		{
-			if (getType(idToken->value) == "int" || getType(idToken->value) == "int") {
-				return false;
-			}
+			return true;
 		}
-		else
+		if (getType(idToken->value) == "int" && getType(stack.back()) == "bool")
 		{
-			if (getSize(idToken->value) != getSize(stack.back().value))
-			{
-				return false;
-			}
+			return true;
 		}
-	}
-	else
-	{
-		return false;
+		if (getType(idToken->value) == "bool" && getType(stack.back()) == "bool")
+		{
+			return true;
+		}
+		if (getType(idToken->value) == "bool" && getType(stack.back()) == "int")
+		{
+			return true;
+		}
+		if (getSize(idToken->value) != getSize(stack.back()))
+		{
+			return false;
+		}
 	}
 
 	return true;
