@@ -9,10 +9,10 @@ using namespace std;
 class Token
 {
 public:
-	Token(Symbol tokenType, string const& value, int const lineNumber);
+	Token(Symbol tokenType, string const& lexeme, int const line);
 
-	int lineNumber;
-	string value;
+	int line;
+	string lexeme;
 	Symbol symbol;
-	vector<Token> formingTokens;
+	vector<Token> nodes;
 };

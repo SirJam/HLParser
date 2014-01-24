@@ -18,9 +18,9 @@ VariablesTable::~VariablesTable()
 
 Token *VariablesTable::GetLastVariable(Token *token)
 {
-	if (token->formingTokens.size())
+	if (token->nodes.size())
 	{
-		token = GetLastVariable(&token->formingTokens[0]);
+		token = GetLastVariable(&token->nodes[0]);
 	}
 	else
 	{
@@ -30,9 +30,9 @@ Token *VariablesTable::GetLastVariable(Token *token)
 
 void VariablesTable::GetBodyWithoutTail(Token & token)
 {
-	if (token.formingTokens.size() == 3)
+	if (token.nodes.size() == 3)
 	{
-		GetBodyWithoutTail(token.formingTokens[0]);
+		GetBodyWithoutTail(token.nodes[0]);
 	}
 	else
 	{
@@ -48,34 +48,34 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 	int factor = 1;
 	int xDimention = 0;
 
-	if (stack.at(stack.size() - 3).formingTokens.back().symbol.name == RuleName::PRIMITIVE_TYPE())
+	if (stack.at(stack.size() - 3).nodes.back().symbol.m_term == RuleName::PRIMITIVE_TYPE())
 	{
 		typeToken = stack.at(stack.size() - 3);
-		type = typeToken.formingTokens.front().formingTokens.front().value;
+		type = typeToken.nodes.front().nodes.front().lexeme;
 		help_type = type;
 	}
 	else
 	{
-		typeToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens.back();
-		type = typeToken.formingTokens.front().value;
+		typeToken = stack.at(stack.size() - 3).nodes.back().nodes.back();
+		type = typeToken.nodes.front().lexeme;
 		help_type = type;
-		Token factorToken = stack.at(stack.size() - 3).formingTokens.back().formingTokens[1];
-		if (factorToken.formingTokens.size() == 1)
+		Token factorToken = stack.at(stack.size() - 3).nodes.back().nodes[1];
+		if (factorToken.nodes.size() == 1)
 		{
 			help_type = type + "_array";
-			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value);
+			factor = stoi(factorToken.nodes.back().nodes.back().lexeme);
 		}
 		else
 		{
 			help_type = type + "_double_array";
-			factor = stoi(factorToken.formingTokens.back().formingTokens.back().value) * stoi(factorToken.formingTokens.front().formingTokens.back().value);
-			xDimention = stoi(factorToken.formingTokens.back().formingTokens.back().value);
+			factor = stoi(factorToken.nodes.back().nodes.back().lexeme) * stoi(factorToken.nodes.front().nodes.back().lexeme);
+			xDimention = stoi(factorToken.nodes.back().nodes.back().lexeme);
 		}
 	}
 
 	if (!TypeChecker::IsAllowedType(type))
 	{
-		ErrorHandler::FailedWithTypeError(type, typeToken.lineNumber);
+		ErrorHandler::FailedWithTypeError(type, typeToken.line);
 	}
 
 	Token *identifiersDefinition = &stack.at(stack.size() - 2);
@@ -85,42 +85,42 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 		Variable variable;
 		int count = 1;
 
-		identifierDefinition = &identifiersDefinition->formingTokens.back();
-		if (identifierDefinition->formingTokens.size() == 1)
+		identifierDefinition = &identifiersDefinition->nodes.back();
+		if (identifierDefinition->nodes.size() == 1)
 		{
-			idToken = &identifierDefinition->formingTokens.front();
+			idToken = &identifierDefinition->nodes.front();
 		}
 		else
 		{
 			idToken = identifierDefinition;
 		}
 
-		if (ReservedWords::IsReservedWord(idToken->value))
+		if (ReservedWords::IsReservedWord(idToken->lexeme))
 		{
-			ErrorHandler::FailedWithReservedWord(idToken->value, idToken->lineNumber);
+			ErrorHandler::FailedWithReservedWord(idToken->lexeme, idToken->line);
 		}
 
 		if (m_variablesTable->size())
 		{
 			for (Variable var : *m_variablesTable)
 			{
-				if (var.m_name == idToken->value)
+				if (var.m_name == idToken->lexeme)
 				{
-					ErrorHandler::FailedWithRedefinition(idToken->value, idToken->lineNumber);
+					ErrorHandler::FailedWithRedefinition(idToken->lexeme, idToken->line);
 				}
 			}
 		}
 
-		variable.m_name = idToken->value;
+		variable.m_name = idToken->lexeme;
 		variable.m_type = help_type;
 		variable.m_size = SizeManager::SizeOfType(variable.m_type) * factor;
 		variable.m_xDimension = xDimention;
 
 		m_variablesTable->push_back(variable);
 
-		if (identifiersDefinition->formingTokens.size() == 3)
+		if (identifiersDefinition->nodes.size() == 3)
 		{
-			identifiersDefinition = &identifiersDefinition->formingTokens.front();
+			identifiersDefinition = &identifiersDefinition->nodes.front();
 		}
 		else
 		{
@@ -140,16 +140,16 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 
 	for (Variable var : *m_variablesTable)
 	{
-		if (var.m_name == idToken.value)
+		if (var.m_name == idToken.lexeme)
 		{
 			isVarExist = true;
 			break;
 		}
 	}
 
-	if (!isVarExist) ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.name, idToken.lineNumber);
+	if (!isVarExist) ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.m_term, idToken.line);
 
-	if (expressionAndSymbolToken.value != RuleName::EXPRESSION_AND_SYMBOL()) {
+	if (expressionAndSymbolToken.lexeme != RuleName::EXPRESSION_AND_SYMBOL()) {
 
 	}
 }
@@ -245,14 +245,14 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 
 	do
 	{
-		if (currToken->formingTokens.size() == 1)
+		if (currToken->nodes.size() == 1)
 		{
-			currToken = &currToken->formingTokens.back();
+			currToken = &currToken->nodes.back();
 		}
 		else
-		if (currToken->formingTokens.size() == 2)
+		if (currToken->nodes.size() == 2)
 		{
-			if (currToken->formingTokens.back().value == "!")
+			if (currToken->nodes.back().lexeme == "!")
 			{
 				expressionStack.push_back("!");
 			}
@@ -260,72 +260,72 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 			{
 				expressionStack.push_back("--");
 			}
-			currToken = &currToken->formingTokens.front();
+			currToken = &currToken->nodes.front();
 		}
 		else
 		{
-			if (currToken->formingTokens.size() == 4)
+			if (currToken->nodes.size() == 4)
 			{
-				if (currToken->formingTokens.back().value == "!")
+				if (currToken->nodes.back().lexeme == "!")
 				{
 					expressionStack.push_back("!");
 				}
-				nextTokens.push(&currToken->formingTokens[1]);
-				currToken = &currToken->formingTokens.back();
+				nextTokens.push(&currToken->nodes[1]);
+				currToken = &currToken->nodes.back();
 			}
-			if (currToken->formingTokens.size() == 3)
+			if (currToken->nodes.size() == 3)
 			{
-				if (currToken->formingTokens.front().value == ")" && currToken->formingTokens.back().value == "(")
+				if (currToken->nodes.front().lexeme == ")" && currToken->nodes.back().lexeme == "(")
 				{
-					currToken = &currToken->formingTokens[1];
+					currToken = &currToken->nodes[1];
 				}
-				if (currToken->formingTokens.size() > 1 && currToken->formingTokens[1].value == ",")
+				if (currToken->nodes.size() > 1 && currToken->nodes[1].lexeme == ",")
 				{
-					nextTokens.push(&currToken->formingTokens.back());
-					currToken = &currToken->formingTokens.front();
+					nextTokens.push(&currToken->nodes.back());
+					currToken = &currToken->nodes.front();
 				}
 				else
 				{
-					if (currToken->formingTokens.front().formingTokens.size() == 1)
+					if (currToken->nodes.front().nodes.size() == 1)
 					{
-						if (currToken->formingTokens.size() > 1) {
-							expressionStack.push_back(currToken->formingTokens[1].value);
-							nextTokens.push(&currToken->formingTokens.back());
+						if (currToken->nodes.size() > 1) {
+							expressionStack.push_back(currToken->nodes[1].lexeme);
+							nextTokens.push(&currToken->nodes.back());
 						}
-						currToken = &currToken->formingTokens.front();
+						currToken = &currToken->nodes.front();
 					}
-					else if (currToken->formingTokens.front().formingTokens.size() == 2)
+					else if (currToken->nodes.front().nodes.size() == 2)
 					{
-						expressionStack.push_back(currToken->formingTokens[1].value);
-						nextTokens.push(&currToken->formingTokens.front());
-						currToken = &currToken->formingTokens.back();
+						expressionStack.push_back(currToken->nodes[1].lexeme);
+						nextTokens.push(&currToken->nodes.front());
+						currToken = &currToken->nodes.back();
 					}
-					else if (currToken->formingTokens.front().formingTokens.size() == 3)
+					else if (currToken->nodes.front().nodes.size() == 3)
 					{
-						if (currToken->formingTokens.size() == 3)
+						if (currToken->nodes.size() == 3)
 						{
-							expressionStack.push_back(currToken->formingTokens[1].value);
-							nextTokens.push(&currToken->formingTokens.back());
-							currToken = &currToken->formingTokens.front();
+							expressionStack.push_back(currToken->nodes[1].lexeme);
+							nextTokens.push(&currToken->nodes.back());
+							currToken = &currToken->nodes.front();
 						}
 						else
 						{
-							expressionStack.push_back(currToken->formingTokens.back().formingTokens[1].value);
-							nextTokens.push(&currToken->formingTokens.back().formingTokens.front());
-							currToken = &currToken->formingTokens.back().formingTokens.back();
+							expressionStack.push_back(currToken->nodes.back().nodes[1].lexeme);
+							nextTokens.push(&currToken->nodes.back().nodes.front());
+							currToken = &currToken->nodes.back().nodes.back();
 						}
 					}
 				}
 			}
 		}
 
-		if (currToken->formingTokens.size() == 0)
+		if (currToken->nodes.size() == 0)
 		{
-			if (currToken->symbol.name == RuleName::IDENTIFIER() && !DoesVariableExists(currToken->value))
+			if (currToken->symbol.m_term == RuleName::IDENTIFIER() && !DoesVariableExists(currToken->lexeme))
 			{
-				ErrorHandler::FailedWithNotExistingVariable(currToken->value, currToken->lineNumber);
+				ErrorHandler::FailedWithNotExistingVariable(currToken->lexeme, currToken->line);
 			}
-			expressionStack.push_back(currToken->value);
+			expressionStack.push_back(currToken->lexeme);
 			if (nextTokens.size())
 			{
 				currToken = nextTokens.top();
@@ -333,7 +333,7 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 			}
 
 		}
-	} while (currToken->formingTokens.size());
+	} while (currToken->nodes.size());
 
 	if (isAssignment)
 		CompareTypes(stack, expressionStack);
@@ -344,9 +344,9 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 
 Token *VariablesTable::GetRootToken(Token *token)
 {
-	while (token->formingTokens.size())
+	while (token->nodes.size())
 	{
-		token = &token->formingTokens.back();
+		token = &token->nodes.back();
 	}
 
 	return token;
@@ -358,7 +358,7 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 	bool isElementOfArray = false;
 	bool is2DArray = false;
 
-	if (stack.at(stack.size() - 3).symbol.name == RuleName::IDENTIFIER())
+	if (stack.at(stack.size() - 3).symbol.m_term == RuleName::IDENTIFIER())
 	{
 		leftPart = &stack.at(stack.size() - 3);
 	}
@@ -366,7 +366,7 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 	{
 		leftPart = &stack.at(stack.size() - 6);
 		isElementOfArray = true;
-		if (stack.at(stack.size() - 4).formingTokens.size() == 3) {
+		if (stack.at(stack.size() - 4).nodes.size() == 3) {
 			is2DArray = true;
 		}
 	}
@@ -381,12 +381,12 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 	}
 	if (!isElementOfArray)
 	{
-		string type = getType(leftPart->value);
+		string type = getType(leftPart->lexeme);
 		if (type == "int" || type == "bool")
 		{
 			if (!IsAssignableIntBoolExpression(rightPart, leftPart))
 			{
-				ErrorHandler::FailedWithNotAssignableIntBoolExpression(leftPart->value, leftPart->lineNumber);
+				ErrorHandler::FailedWithNotAssignableIntBoolExpression(leftPart->lexeme, leftPart->line);
 			}
 		}
 		else
@@ -395,7 +395,7 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 			{
 				if (!IsAssignableArrayExpression(rightPart, leftPart))
 				{
-					ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->value, leftPart->lineNumber);
+					ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->lexeme, leftPart->line);
 				}
 			}
 		}
@@ -406,13 +406,13 @@ bool VariablesTable::IsAssignableArrayExpression(vector<string> stack, Token *ar
 {
 	if (stack.size() == 1)
 	{
-		if (getType(arrayToken->value) != getType(stack.back()))
+		if (getType(arrayToken->lexeme) != getType(stack.back()))
 		{
 			return false;
 		}
 		else
 		{
-			if (getSize(arrayToken->value) != getSize(stack.back()))
+			if (getSize(arrayToken->lexeme) != getSize(stack.back()))
 			{
 				return false;
 			}
@@ -430,23 +430,23 @@ bool VariablesTable::IsAssignableIntBoolExpression(vector<string> stack, Token *
 {
 	if (stack.size() == 1)
 	{
-		if (getType(idToken->value) == "int" && getType(stack.back()) == "int")
+		if (getType(idToken->lexeme) == "int" && getType(stack.back()) == "int")
 		{
 			return true;
 		}
-		if (getType(idToken->value) == "int" && getType(stack.back()) == "bool")
+		if (getType(idToken->lexeme) == "int" && getType(stack.back()) == "bool")
 		{
 			return true;
 		}
-		if (getType(idToken->value) == "bool" && getType(stack.back()) == "bool")
+		if (getType(idToken->lexeme) == "bool" && getType(stack.back()) == "bool")
 		{
 			return true;
 		}
-		if (getType(idToken->value) == "bool" && getType(stack.back()) == "int")
+		if (getType(idToken->lexeme) == "bool" && getType(stack.back()) == "int")
 		{
 			return true;
 		}
-		if (getSize(idToken->value) != getSize(stack.back()))
+		if (getSize(idToken->lexeme) != getSize(stack.back()))
 		{
 			return false;
 		}

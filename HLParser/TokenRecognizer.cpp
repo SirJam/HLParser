@@ -7,19 +7,19 @@ TokenRecognizer::TokenRecognizer(vector<Symbol> const& symbolTable)
 	symbols = symbolTable;
 }
 
-Symbol TokenRecognizer::TokenTypeByTokensValue(string const& value)
+Symbol TokenRecognizer::TokenTypeByTokensValue(string const& lexeme)
 {
 	for (Symbol symbol : symbols) 
 	{
-		if (value == symbol.name && symbol.type == 1 && value != RuleName::EOF_RULE() && value != RuleName::ERROR()
-			&& value != RuleName::WHITESPACE() && value != RuleName::IDENTIFIER() && value != RuleName::DIGITS()) 
+		if (lexeme == symbol.m_term && symbol.m_type == 1 && lexeme != RuleName::EOF_RULE() && lexeme != RuleName::ERROR()
+			&& lexeme != RuleName::WHITESPACE() && lexeme != RuleName::IDENTIFIER() && lexeme != RuleName::DIGITS()) 
 		{
 			return symbol;
 		}
 	}
 
-	if (isNumber(value)) return TokenTypeByTokenName(RuleName::DIGITS());
-	if (isId(value)) return TokenTypeByTokenName(RuleName::IDENTIFIER());
+	if (isNumber(lexeme)) return TokenTypeByTokenName(RuleName::DIGITS());
+	if (isId(lexeme)) return TokenTypeByTokenName(RuleName::IDENTIFIER());
 
 	return TokenTypeByTokenName(RuleName::ERROR());
 }
@@ -28,13 +28,13 @@ Symbol TokenRecognizer::TokenTypeByTokenName(string const& name)
 {
 	for (Symbol symbol : symbols) 
 	{
-		if (symbol.name == name) return symbol;
+		if (symbol.m_term == name) return symbol;
 	}
 }
 
-bool TokenRecognizer::isNumber(string const& value)
+bool TokenRecognizer::isNumber(string const& lexeme)
 {
-	for (char ch : value) 
+	for (char ch : lexeme) 
 	{
 		if (!isdigit(ch)) 
 		{
@@ -44,10 +44,10 @@ bool TokenRecognizer::isNumber(string const& value)
 	return true;
 }
 
-bool TokenRecognizer::isId(string const& value)
+bool TokenRecognizer::isId(string const& lexeme)
 {
 	bool isPotentialId = true;
-	for (char ch : value) 
+	for (char ch : lexeme) 
 	{
 		if (!isdigit(ch) && !isalpha(ch)) 
 		{
@@ -55,5 +55,5 @@ bool TokenRecognizer::isId(string const& value)
 		}
 	}
 
-	return (isPotentialId && !isdigit(value[0]));
+	return (isPotentialId && !isdigit(lexeme[0]));
 }

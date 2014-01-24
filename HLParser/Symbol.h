@@ -5,7 +5,7 @@ using namespace std;
 
 struct Symbol
 {
-  int index;
-  string name;
-  int type;
+  int m_index;
+  string m_term;
+  int m_type;
 };

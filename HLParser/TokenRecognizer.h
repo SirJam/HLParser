@@ -9,10 +9,10 @@ class TokenRecognizer
 {
 public:
 	TokenRecognizer(vector<Symbol> const& symbolTable);
-	Symbol TokenTypeByTokensValue(string const& value);
+	Symbol TokenTypeByTokensValue(string const& lexeme);
 private:
 	vector<Symbol> symbols;
 	Symbol TokenTypeByTokenName(string const& name);
-	bool isNumber(string const& value);
-	bool isId(string const& value);
+	bool isNumber(string const& lexeme);
+	bool isId(string const& lexeme);
 };
