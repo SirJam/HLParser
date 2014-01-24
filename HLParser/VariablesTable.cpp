@@ -252,13 +252,24 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 		else 
 		if (currToken->formingTokens.size() == 2)
 		{
-			expressionStack.push_back("--");
+			if (currToken->formingTokens.back().value == "!")
+			{
+				expressionStack.push_back("!");
+			}
+			else
+			{
+				expressionStack.push_back("--");
+			}
 			currToken = &currToken->formingTokens.front();
 		}
 		else
 		{
 			if (currToken->formingTokens.size() == 4)
 			{
+				if (currToken->formingTokens.back().value == "!")
+				{
+					expressionStack.push_back("!");
+				}
 				nextTokens.push(&currToken->formingTokens[1]);
 				currToken = &currToken->formingTokens.back();
 			}
