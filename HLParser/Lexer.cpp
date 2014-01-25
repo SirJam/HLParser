@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "Lexer.h"
+#include "ErrorHandler.h"
 
 Lexer::Lexer(const char *fileName, vector<Symbol> const& symbolTable)
 :tokenRecognizer(symbolTable) {
@@ -128,11 +129,28 @@ string Lexer::GetNextWord()
 Token Lexer::nextToken()
 {
 	string stringBuffer = GetNextWord();
-
+	CheckNumberOnLength(stringBuffer);
 	Symbol tokenType = tokenRecognizer.TokenTypeByTokensValue(stringBuffer);
 	Token token = Token(tokenType, stringBuffer, line);
 
 	return token;
+}
+
+void Lexer::CheckNumberOnLength(string const &str)
+{
+	bool isNumber = true;
+	if (str.size() && isdigit(str.front()))
+	{
+		for (char ch : str)
+		{
+			isNumber = isdigit(ch);
+		}
+
+		if (isNumber && str.size() > 9) 
+		{
+			ErrorHandler::FailedWithMaxLengthOfNumber(str, line);
+		}
+	}
 }
 
 bool Lexer::nextTokenExists()

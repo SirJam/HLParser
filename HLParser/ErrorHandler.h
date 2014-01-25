@@ -35,6 +35,10 @@ public:
 	{
 		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "\n  --==Syntax error==--\n\n" + "Expected tokens: \n\n" + expectedValues + "\nReceived token: '" + name + "'!\n");
 	}
+	static void FailedWithMaxLengthOfNumber(string name, int line)
+	{
+		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Value of number '" + name + "' is more than 999.999.999\n");
+	}
 
 	static void ShowErrorLineAndMessageAndExit(string str)
 	{
