@@ -11,53 +11,53 @@ class Generator
 public:
 	Generator();
 
-	void createASMFile(string fileName);
-	void createProgramStart();	
-	void createProgramEnd(int const varSpace);
+	void MakeASM(string fileName);
+	void WriteProgramHead();	
+	void WriteProgramEnd(int const varSpace);
 	
-	void createAddOperation();	
-	void createSubstractOperation();
-	void createMultiplyOperation();
-	void createDivideOperation();
+	void AddToAsm();	
+	void SubToAsm();
+	void MulToAsm();
+	void DivToAsm();
 
-	void negateResult();
-	void createExpressionInversion();
+	void NagativVal();
+	void InverseExpression();
 
-	void createVariableSpace(int const space);
+	void AllocateSpace(int const space);
 
-	void createIntVariable(int const offset, string const type, int x = 0);
-	void createIntConstant(int num);
+	void WriteIntVar(int const offset, string const type, int x = 0);
+	void WriteIntConst(int num);
 		
-	void createPrintInteger();	
+	void IntToConsole();	
 
-	void createAssignmentOperation(int const offset, string const type, int x = 0);
+	void WriteAssignment(int const offset, string const type, int x = 0);
 
-	void createRelExpression(const string& relOperator);
-	void applyAndExpression();
-	void applyOrExpression();
+	void WriteRelation(const string& relOperator);
+	void WriteAnd();
+	void WriteOr();
 
-	void createIfExpressionStartPart(string &falseLabel);
-	void createIfExpressionEndPart(string falseLabel);
-	string createIfExpressionMiddlePart(string &label);
+	void WriteIfStart(string &falseLabel);
+	void WriteIfEnd(string falseLabel);
+	string WriteIfMiddle(string &label);
 
-	string createWhileExpressionStartLabel(string &label);
-	void createWhileExpressionStartPart(string label);
-	void createWhileExpressionEndPart(string label1, string label2);
+	string WriteWhileStartLabel(string &label);
+	void WriteWhileStartPart(string label);
+	void WriteWhileEndPart(string label1, string label2);
 
-	void addReadVariable(int const offset, string const varType, int xDim = 0);
-	void addWriteVariable(int const offset, string const type, int xDim = 0);
+	void AddReadVariable(int const offset, string const varType, int xDim = 0);
+	void AddWriteVariable(int const offset, string const type, int xDim = 0);
 
-	void writeSomething();
+	void WriteSomething();
 		
 private:
-	ostringstream programStream;
-	ostringstream dataStream;
-	ostringstream procedureStream;
+	ostringstream m_program;
+	ostringstream m_data;
+	ostringstream m_function;
 	
-	int labelsCount;
-	bool isPrintAdded, isInputOutputDataAdded, isReadAdded, isMainStringBufferAdded;
+	int m_labelsCount;
+	bool m_isPrintAdded, m_isInputOutputDataAdded, m_isReadAdded;
 
-	void addPrintFunctionality();
-	void addClearBuffer();	
-	string getLabelName();	
+	void AddPrintFunctionality();
+	void AddClearBuffer();	
+	string GetLabelName();	
 };

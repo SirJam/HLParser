@@ -27,6 +27,7 @@ private:
 	bool isEmptyCharacter(char ch);
 	bool isDigitOrChar(char ch);
 	bool isSpecialCharacter(char ch);
+	void CheckNumberOnLength(string const &str);
 
 	TokenRecognizer tokenRecognizer;
 };

@@ -3,63 +3,57 @@
 #include <fstream>
 
 Generator::Generator()
-:isPrintAdded(false), 
-isInputOutputDataAdded(false), 
-isReadAdded(false),
-labelsCount(0)
+:m_isPrintAdded(false), 
+m_isInputOutputDataAdded(false), 
+m_isReadAdded(false),
+m_labelsCount(0)
 {
-	createProgramStart();
+	WriteProgramHead();
 }
 
-void Generator::createASMFile(string fileName)
+void Generator::MakeASM(string fileName)
 {
 	ofstream outFile;
 	outFile.open(fileName);
-
-	outFile << dataStream.str().c_str();
-	outFile << programStream.str().c_str();
-	outFile << procedureStream.str().c_str();
+	outFile << m_data.str().c_str();
+	outFile << m_program.str().c_str();
+	outFile << m_function.str().c_str();
 	outFile.close();
 }
 
 
-void Generator::createProgramStart()
+void Generator::WriteProgramHead()
 {
 	ostringstream streamOfProgram;
 	ostringstream streamOfData;
-
 	streamOfProgram << "\nCODE SECTION\n";
 	streamOfProgram << "START:\n";
 	streamOfProgram << "PUSH EBP\n"; // Saving previous stackbase-pointer register
 	streamOfProgram << "MOV EBP, ESP\n\n";
-
 	streamOfData << "DATA SECTION\n";
-
-	programStream << streamOfProgram.str();
-	dataStream << streamOfData.str();
+	m_program << streamOfProgram.str();
+	m_data << streamOfData.str();
 }
 
-void Generator::createProgramEnd(int const varSpace)
+void Generator::WriteProgramEnd(int const varSpace)
 {
 	ostringstream stream;
-
 	stream << "ADD ESP, " << varSpace << "\n";
 	stream << "MOV ESP, EBP\n";
 	stream << "POP EBP\n";
 	stream << "MOV EAX, 0\n";
 	stream << "RET\n\n";
-
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createVariableSpace(int const space)
+void Generator::AllocateSpace(int const space)
 {
 	ostringstream stream;
 	stream << "SUB ESP, " << space << "\n\n";
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createAddOperation()
+void Generator::AddToAsm()
 {
 	ostringstream stream;
 
@@ -68,10 +62,10 @@ void Generator::createAddOperation()
 	stream << "ADD EAX, EDX\n";
 	stream << "PUSH EAX\n\n";
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createSubstractOperation()
+void Generator::SubToAsm()
 {
 	ostringstream stream;
 
@@ -80,10 +74,10 @@ void Generator::createSubstractOperation()
 	stream << "SUB EDX, EAX\n";
 	stream << "PUSH EDX\n\n";
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createMultiplyOperation()
+void Generator::MulToAsm()
 {
 	ostringstream stream;
 
@@ -92,10 +86,10 @@ void Generator::createMultiplyOperation()
 	stream << "IMUL EAX, EDX\n";
 	stream << "PUSH EAX\n\n";
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createDivideOperation()
+void Generator::DivToAsm()
 {
 	ostringstream stream;
 
@@ -106,36 +100,36 @@ void Generator::createDivideOperation()
 	stream << "IDIV EBX\n";
 	stream << "PUSH EAX\n\n";
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createIntConstant(int num)
+void Generator::WriteIntConst(int num)
 {
 	ostringstream stream;
 	stream << "PUSH " << num << "\n\n";
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createIntVariable(int const offset, string const type, int x)
+void Generator::WriteIntVar(int const offset, string const type, int x)
 {
-	addReadVariable(offset, type, x);
+	AddReadVariable(offset, type, x);
 	ostringstream stream;
 	stream << "PUSH EAX\n\n";
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createAssignmentOperation(int const offset, string const type, int x)
+void Generator::WriteAssignment(int const offset, string const type, int x)
 {
-	addWriteVariable(offset, type, x);
+	AddWriteVariable(offset, type, x);
 }
 
-void Generator::addWriteVariable(int const offset, string const type, int xDim)
+void Generator::AddWriteVariable(int const offset, string const type, int xDim)
 {
 	ostringstream stream;
-	string error1 = getLabelName();
-	string error2 = getLabelName();
-	string notError1 = getLabelName();
-	string notError2 = getLabelName();
+	string error1 = GetLabelName();
+	string error2 = GetLabelName();
+	string notError1 = GetLabelName();
+	string notError2 = GetLabelName();
 
 
 	if (type == "int_array" || type == "bool_array") {
@@ -170,17 +164,17 @@ void Generator::addWriteVariable(int const offset, string const type, int xDim)
 		stream << "MOV [EBP - " << offset << "], EAX\n\n";
 	}
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::addReadVariable(int const offset, string const type, int xDim) //read value from stack to EAX
+void Generator::AddReadVariable(int const offset, string const type, int xDim) //read value from stack to EAX
 {
 	ostringstream stream;
 
-	string error1 = getLabelName();
-	string error2 = getLabelName();
-	string notError1 = getLabelName();
-	string notError2 = getLabelName();
+	string error1 = GetLabelName();
+	string error2 = GetLabelName();
+	string notError1 = GetLabelName();
+	string notError2 = GetLabelName();
 
 	if (type == "int_array" || type == "bool_array") {
 		stream << "POP EDX\n";
@@ -212,14 +206,14 @@ void Generator::addReadVariable(int const offset, string const type, int xDim) /
 		stream << "MOV EAX, [EBP - " << offset << "]\n";
 	}
 
-	programStream << stream.str(); 
+	m_program << stream.str(); 
 }
 
-void Generator::createPrintInteger()
+void Generator::IntToConsole()
 {
-	if (!isPrintAdded) {
-		addPrintFunctionality();
-		isPrintAdded = true;
+	if (!m_isPrintAdded) {
+		AddPrintFunctionality();
+		m_isPrintAdded = true;
 	}
 
 	ostringstream stream;
@@ -248,22 +242,22 @@ void Generator::createPrintInteger()
 	stream << "PUSH EAX\n";
 	stream << "CALL WriteFile\n\n";
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::addPrintFunctionality()
+void Generator::AddPrintFunctionality()
 {
 	ostringstream streamOfData;
 	ostringstream streamOfProcedures;
 
 	streamOfData << "CONSOLE_OUT_HANDLE_CODE EQU -11\n";
 
-	if (!isInputOutputDataAdded) {
+	if (!m_isInputOutputDataAdded) {
 		streamOfData << "RCKEEP DD 0\n";
 		streamOfData << "CONST_10 DD 10\n";
 		streamOfData << "BUFFER DB 12 DUP ('0')\n"; // Extra space for new line and negative sign characters
-		addClearBuffer();
-		isInputOutputDataAdded = true;
+		AddClearBuffer();
+		m_isInputOutputDataAdded = true;
 	}
 
 	streamOfProcedures << "FILL_BUFFER:\n"; // filling the string buffer with number in EAX
@@ -319,11 +313,11 @@ void Generator::addPrintFunctionality()
 	streamOfProcedures << "MOV EAX, ECX\n";
 	streamOfProcedures << "RET\n\n";
 
-	dataStream << streamOfData.str();
-	procedureStream << streamOfProcedures.str();
+	m_data << streamOfData.str();
+	m_function << streamOfProcedures.str();
 }
 
-void Generator::addClearBuffer()
+void Generator::AddClearBuffer()
 {
 	ostringstream streamOfProcedures;
 
@@ -342,10 +336,10 @@ void Generator::addClearBuffer()
 
 	streamOfProcedures << "RET\n";
 
-	procedureStream << streamOfProcedures.str();
+	m_function << streamOfProcedures.str();
 }
 
-void Generator::createRelExpression(const string& rel)
+void Generator::WriteRelation(const string& rel)
 {
 	ostringstream stream;
 
@@ -368,8 +362,8 @@ void Generator::createRelExpression(const string& rel)
 		command = "JNE";
 	}
 
-	string trueLabel = getLabelName();
-	string endLabel = getLabelName();
+	string trueLabel = GetLabelName();
+	string endLabel = GetLabelName();
 	command += " >" + trueLabel + "\n";
 
 	stream << command;
@@ -380,22 +374,22 @@ void Generator::createRelExpression(const string& rel)
 	stream << (endLabel) + ":\n";
 	stream << "PUSH EAX\n\n";
 	
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-string Generator::getLabelName()
+string Generator::GetLabelName()
 {
-	string label = "@label" + std::to_string(static_cast<long long>(labelsCount));
-	labelsCount++;
+	string label = "@label" + std::to_string(static_cast<long long>(m_labelsCount));
+	m_labelsCount++;
 	return label;
 }
 
-void Generator::applyAndExpression()
+void Generator::WriteAnd()
 {
 	ostringstream stream;
 	
-	string elseLabel = getLabelName();
-	string endLabel = getLabelName();
+	string elseLabel = GetLabelName();
+	string endLabel = GetLabelName();
 
 	stream << "POP EBX\n";
 	stream << "POP EAX\n";
@@ -409,15 +403,15 @@ void Generator::applyAndExpression()
 	stream << "PUSH 0\n";
 	stream << (endLabel + ":\n\n");
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::applyOrExpression()
+void Generator::WriteOr()
 {
 	ostringstream stream;
 	
-	string trueLabel = getLabelName();
-	string endLabel = getLabelName();
+	string trueLabel = GetLabelName();
+	string endLabel = GetLabelName();
 
 	stream << "POP EBX\n";
 	stream << "POP EAX\n";
@@ -429,88 +423,88 @@ void Generator::applyOrExpression()
 	stream << (trueLabel + ":\n");
 	stream << "PUSH 0\n";
 	stream << (endLabel + ":\n\n");
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createIfExpressionStartPart(string &falseLabel)
+void Generator::WriteIfStart(string &falseLabel)
 {
 	ostringstream stream;
 
-	falseLabel = getLabelName();	
+	falseLabel = GetLabelName();	
 	stream << "POP EAX\n";
 	stream << "CMP EAX, 0\n";
 	stream << ("JE >" + falseLabel + "\n\n");
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createIfExpressionEndPart(string falseLabel)
+void Generator::WriteIfEnd(string falseLabel)
 {
 	ostringstream stream;		
 	stream << (falseLabel + ":\n\n");
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-string Generator::createIfExpressionMiddlePart(string &label)
+string Generator::WriteIfMiddle(string &label)
 {
 	ostringstream stream;	
 
-	string midLabel = getLabelName();
+	string midLabel = GetLabelName();
 
 	stream << "JMP " << midLabel << "\n";
 	stream << (label + ":\n\n");
-	programStream << stream.str();
+	m_program << stream.str();
 
 	return midLabel;
 }
 
-string Generator::createWhileExpressionStartLabel(string &label)
+string Generator::WriteWhileStartLabel(string &label)
 {
 	ostringstream stream;
-	label = getLabelName();	
+	label = GetLabelName();	
 	stream << (label + ":\n");	
-	programStream << stream.str();
+	m_program << stream.str();
 
-	string secondLabel = getLabelName();	
+	string secondLabel = GetLabelName();	
 	return secondLabel;
 }
 
-void Generator::createWhileExpressionStartPart(string label)
+void Generator::WriteWhileStartPart(string label)
 {
 	ostringstream stream;	
 	stream << "POP EAX\n";
 	stream << "CMP EAX, 0\n";
 	stream << ("JE >" + label + "\n\n");
 
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createWhileExpressionEndPart(string label1, string label2)
+void Generator::WriteWhileEndPart(string label1, string label2)
 {
 	ostringstream stream;	
 	stream << "JMP " << label1 << "\n";
 	stream << (label2 + ":\n\n");
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::negateResult()
+void Generator::NagativVal()
 {
 	ostringstream stream;
 	stream << "POP EAX\n";
 	stream << "NEG EAX\n";
 	stream << "PUSH EAX\n";
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::createExpressionInversion()
+void Generator::InverseExpression()
 {
 	ostringstream stream;	
 	stream << "POP EAX\n";
 	stream << "XOR EAX, 1\n";
 	stream << "PUSH EAX\n";
-	programStream << stream.str();
+	m_program << stream.str();
 }
 
-void Generator::writeSomething()
+void Generator::WriteSomething()
 {
-	programStream << "ekrghioberpgbkerjbgkjlern\n";
+	m_program << "ekrghioberpgbkerjbgkjlern\n";
 }
