@@ -10,7 +10,7 @@ TablesReader::TablesReader()
 
 	m_lalrStateIndex = 0;
 	m_currentProduction = 0;
-	dump_to_stdout("HLGrammar.xml");
+	dump_to_stdout("GOD-C_Grammar.xml");
 }
 
 vector<Symbol> *TablesReader::GetSymbolsTable()

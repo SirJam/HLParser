@@ -146,15 +146,6 @@ void Generator::addWriteVariable(int const offset, string const type, int xDim)
 		stream << "MOV EDX, " << offset << "\n";
 		stream << "SUB EDX, EAX\n";
 
-		/*stream << "CMP EDX, " << offset <<"\n";
-		stream << "JG >" << error1 << "\n";
-		stream << "CMP EDX, 0\n";
-		stream << "JLE >" << error1 << "\n";
-		stream << "JMP " << notError1 << "\n";
-		stream << "" << error1 << ":\n";
-		stream << "HLT\n";
-		stream << "" << notError1 << ":\n";*/
-
 		stream << "NEG EDX\n";
 		stream << "POP EAX\n";
 		stream << "MOV [EBP + EDX], EAX\n";
@@ -163,32 +154,12 @@ void Generator::addWriteVariable(int const offset, string const type, int xDim)
 		stream << "POP EDX\n";
 		stream << "POP EAX\n";
 
-		/*stream << "MOV ECX, " << xDim << "\n";
-		stream << "SUB ECX, 1\n";
-		stream << "CMP EAX, ECX\n";
-		stream << "JG >" << error1 << "\n";
-		stream << "CMP EAX, 0\n";
-		stream << "JL >" << error1 << "\n";
-		stream << "JMP " << notError1 << "\n";
-		stream << "" << error1 << ":\n";
-		stream << "HLT\n";
-		stream << "" << notError1 << ":\n";*/
-
 		stream << "IMUL EDX, " << xDim << "\n";		
 		stream << "ADD EAX, EDX\n";
 		stream << "IMUL EAX, 4\n";
 
 		stream << "MOV EDX, " << offset << "\n";
 		stream << "SUB EDX, EAX\n";
-
-		/*stream << "CMP EDX, " << offset <<"\n";
-		stream << "JG >" << error2 << "\n";
-		stream << "CMP EDX, 0\n";
-		stream << "JLE >" << error2 << "\n";
-		stream << "JMP " << notError2 << "\n";
-		stream << "" << error2 << ":\n";
-		stream << "HLT\n";
-		stream << "" << notError2 << ":\n";*/
 
 		stream << "NEG EDX\n";
 		stream << "POP EAX\n";
@@ -219,32 +190,12 @@ void Generator::addReadVariable(int const offset, string const type, int xDim) /
 		stream << "MOV EDX, " << offset << "\n";
 		stream << "SUB EDX, EAX\n";
 
-		/*stream << "CMP EDX, " << offset <<"\n";
-		stream << "JG >" << error1 << "\n";
-		stream << "CMP EDX, 0\n";
-		stream << "JLE >" << error1 << "\n";
-		stream << "JMP " << notError1 << "\n";
-		stream << "" << error1 << ":\n";
-		stream << "HLT\n";
-		stream << "" << notError1 << ":\n";*/
-
 		stream << "NEG EDX\n";
 		stream << "MOV EAX, [EBP + EDX]\n";
 	}
 	else if (type == "int_double_array" || type == "bool_double_array") {
 		stream << "POP EDX\n";
 		stream << "POP EAX\n"; //xCoord
-
-		/*stream << "MOV ECX, " << xDim << "\n";
-		stream << "SUB ECX, 1\n";
-		stream << "CMP EAX, ECX\n";
-		stream << "JG >" << error1 << "\n";
-		stream << "CMP EAX, 0\n";
-		stream << "JL >" << error1 << "\n";
-		stream << "JMP " << notError1 << "\n";
-		stream << "" << error1 << ":\n";
-		stream << "HLT\n";
-		stream << "" << notError1 << ":\n";*/
 
 		stream << "IMUL EDX, " << xDim << "\n";		
 		stream << "ADD EAX, EDX\n";
@@ -253,14 +204,6 @@ void Generator::addReadVariable(int const offset, string const type, int xDim) /
 		stream << "MOV EDX, " << offset << "\n";
 		stream << "SUB EDX, EAX\n";
 
-		/*stream << "CMP EDX, " << offset <<"\n";
-		stream << "JG >" << error2 << "\n";
-		stream << "CMP EDX, 0\n";
-		stream << "JLE >" << error2 << "\n";
-		stream << "JMP " << notError2 << "\n";
-		stream << "" << error2 << ":\n";
-		stream << "HLT\n";
-		stream << "" << notError2 << ":\n";*/
 
 		stream << "NEG EDX\n";
 		stream << "MOV EAX, [EBP + EDX]\n";
@@ -286,12 +229,6 @@ void Generator::createPrintInteger()
 	stream << "CALL CLEAR_BUFFER\n";
 	stream << "CALL FILL_BUFFER\n";
 
-	//if (addNewLine) {
-	//	stream << "LEA EDX, ADDR BUFFER\n";
-	//	stream << "MOV EBX, [CONST_10]\n";
-	//	stream << "MOV B [EDX + EBX], 0AH\n"; // Adding new line character
-	//}
-
 	stream << "MOV EBX, EAX\n";
 
 	stream << "PUSH CONSOLE_OUT_HANDLE_CODE\n";
@@ -302,9 +239,6 @@ void Generator::createPrintInteger()
 
 	stream << "MOV ECX, [CONST_10]\n";
 	stream << "SUB ECX, EBX\n"; // The length of string depends on the number of cycles in FILL_BUFFER
-	//if (addNewLine) {
-	//	stream << "INC ECX\n"; // Adding extra length for new line
-	//}
 	stream << "PUSH ECX\n";
 
 	stream << "MOV ECX, ADDR BUFFER\n";
