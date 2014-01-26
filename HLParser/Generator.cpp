@@ -124,6 +124,23 @@ void Generator::WriteIntVar(int const offset, string const type, int x)
 
 void Generator::WriteAssignment(int const offset, string const type, int x)
 {
+	if (type.find("bool") != string::npos)
+	{
+		//change EAX value to 0 or 1
+		string l1 = GetLabelName();
+		string l2 = GetLabelName();
+		ostringstream stream;
+		stream << "POP EAX\n";
+		stream << "CMP EAX, 1\n";
+		stream << "JGE >" << l1 << "\n";
+		stream << "MOV EAX, 0\n";
+		stream << "JMP >" << l2 << "\n";
+		stream << l1 << ":\n";
+		stream << "MOV EAX, 1\n";
+		stream << l2 << ":\n";
+		stream << "PUSH EAX\n";
+		m_program << stream.str();
+	}
 	AddWriteVariable(offset, type, x);
 }
 
