@@ -8,10 +8,6 @@
 
 int main(int argc, char * argv[])
 {
-	bool a;
-	a = true - true;
-	cout << a << endl;
-
 	char *inputFileName = "input.txt";
 	
 	Generator generator;

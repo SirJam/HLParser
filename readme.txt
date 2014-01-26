@@ -1,4 +1,5 @@
-﻿Hello, my dear BEAR!
-BITCH
-I'm glad to see you now!
-BITCH MOTHER FUCKER
+﻿   Awesome compiler of the universe!
+  / ____/ __ \/ __ \         / ___/
+ / / __/ / / / / / /  ____  / /
+/ /_/ / /_/ / /_/ /  /___/ / /___
+\____/\____/_____/         \____/
