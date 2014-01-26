@@ -19,6 +19,7 @@ public:
 	void SubToAsm();
 	void MulToAsm();
 	void DivToAsm();
+	void ModuloToAsm();
 
 	void NagativVal();
 	void InverseExpression();
@@ -28,7 +29,8 @@ public:
 	void WriteIntVar(int const offset, string const type, int x = 0);
 	void WriteIntConst(int num);
 		
-	void IntToConsole();	
+	void VarToConsole();	
+	void ConsoleToVar();
 
 	void WriteAssignment(int const offset, string const type, int x = 0);
 
@@ -46,6 +48,7 @@ public:
 
 	void AddReadVariable(int const offset, string const varType, int xDim = 0);
 	void AddWriteVariable(int const offset, string const type, int xDim = 0);
+	void AddWriteVarFromConsole(int const offset, string const type, int xDim = 0);
 
 	void WriteSomething();
 		
@@ -58,6 +61,9 @@ private:
 	bool m_isPrintAdded, m_isInputOutputDataAdded, m_isReadAdded;
 
 	void AddPrintFunctionality();
-	void AddClearBuffer();	
+	void AddReadFunctionality();
+	void AddClearBuffer();			
 	string GetLabelName();	
+	void HandleArray(int offset);
+	void HandleDoubleArray(int offset, int xDim);
 };

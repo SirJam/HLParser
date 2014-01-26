@@ -95,6 +95,9 @@ void Parser::parseExpression(vector<string> stack)
 		else if (stack[i] == "/") {
 			generator->DivToAsm();
 		}
+		else if (stack[i] == "%") {
+			generator->ModuloToAsm();
+		}
 		else if (stack[i] == "--") {
 			generator->NagativVal();
 		}
@@ -182,8 +185,7 @@ void Parser::computeProduction(Production *production)
 			vector<string> whileCondition = (m_variablesTable->GetExpressionStack(expression_0, false));
 			parseExpression(whileCondition);
 			
-			generator->WriteWhileStartPart(finLabel);
-								
+			generator->WriteWhileStartPart(finLabel);								
 		}
 	}
 	else if (symbol.m_term == RuleName::GOAL()) // programm end
@@ -211,11 +213,34 @@ void Parser::computeProduction(Production *production)
 		}
 		if (m_tokens.end()[-5].symbol.m_term == RuleName::WRITE())
 		{
-			generator->IntToConsole();
+			generator->VarToConsole();
 		}
 		if (m_tokens.end()[-5].symbol.m_term == RuleName::READ())
 		{
-			//cout << "read" << endl;
+			generator->ConsoleToVar();
+			Token var = m_tokens.end()[-3];
+			if (var.nodes.size() > 1)
+			{
+				if (var.nodes[1].nodes.size() == 1) //одномерный массив
+				{
+					vector<Token> expression_0;
+					expression_0.push_back(var.nodes[1].nodes.back());
+					parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));				
+				}
+				else if (var.nodes[1].nodes.size() == 3) //двумерный массив
+				{
+					vector<Token> expression_0, expression_1;
+					expression_0.push_back(var.nodes[1].nodes.front());
+					expression_1.push_back(var.nodes[1].nodes.back());	
+					parseExpression(m_variablesTable->GetExpressionStack(expression_1, false));
+					parseExpression(m_variablesTable->GetExpressionStack(expression_0, false));
+				}
+			}
+			var = m_tokens.end()[-3].nodes.end()[-1];
+			int offset = m_variablesTable->getOffset(var.lexeme);
+			string type = m_variablesTable->getType(var.lexeme);
+			int x = m_variablesTable->getXDimention(var.lexeme);			
+			generator->AddWriteVarFromConsole(offset, type, x);
 		}
 		if (m_tokens.end()[-3].symbol.m_term == "=" && m_tokens.end()[-4].symbol.m_term != "]")
 		{			

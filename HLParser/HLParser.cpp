@@ -36,11 +36,11 @@ int main(int argc, char * argv[])
 	paramStream << "input.asm";
 	system(paramStream.str().c_str());
 	
-	/*ostringstream paramStream1;
+	ostringstream paramStream1;
 	paramStream1 << "GoLink.exe /console ";
 	paramStream1 << "input.obj";
 	paramStream1 << " kernel32.dll";
-	system(paramStream1.str().c_str());*/
+	system(paramStream1.str().c_str());
 
 	return 0;
 }
