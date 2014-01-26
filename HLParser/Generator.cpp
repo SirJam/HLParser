@@ -257,6 +257,36 @@ void Generator::AddReadVariable(int const offset, string const type, int xDim) /
 	m_program << stream.str(); 
 }
 
+void Generator::BoolToConsole()
+{
+	if (!m_isPrintAdded) {
+		AddPrintFunctionality();
+		m_isPrintAdded = true;
+	}
+
+	ostringstream stream;	
+	string l1 = GetLabelName();
+	string l2 = GetLabelName();
+
+	stream << "POP EDX\n";// take 'bool' value
+	stream << "PUSH -11\n";
+	stream << "CALL GetStdHandle\n";
+	stream << "PUSH 0, ADDR RCKEEP\n";	
+
+	stream << "CMP EDX, 1\n";
+	stream << "JGE >" << l1 << "\n";	
+	stream << "PUSH 5,'FALSE'\n";
+	stream << "JMP >" << l2 << "\n";
+	stream << l1 << ":\n";
+	stream << "PUSH 4,'TRUE'\n";
+	stream << l2 << ":\n";
+
+	stream << "PUSH EAX\n";
+	stream << "CALL WriteFile\n";
+	
+	m_program << stream.str();
+}
+
 void Generator::VarToConsole()
 {
 	if (!m_isPrintAdded) {
@@ -264,8 +294,7 @@ void Generator::VarToConsole()
 		m_isPrintAdded = true;
 	}
 
-	ostringstream stream;
-
+	ostringstream stream;	
 	stream << "POP EAX\n";
 
 	stream << "CALL CLEAR_BUFFER\n";

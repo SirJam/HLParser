@@ -30,6 +30,7 @@ public:
 	void WriteIntConst(int num);
 		
 	void VarToConsole();	
+	void BoolToConsole();
 	void ConsoleToVar();
 
 	void WriteAssignment(int const offset, string const type, int x = 0);

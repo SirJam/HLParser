@@ -20,33 +20,35 @@ class Parser
 public:
 	Parser(Generator *generator);	
 
-	void getNextToken(Token const& token);
-	Token createTokenEOF();
+	void GetNextToken(Token const& token);
+	Token CreateTokenEOF();
 
 	vector<Symbol> *m_symbolsTable;
 	vector<Production> *m_productionsTable;
 	vector<Action> *m_actionsTable;
 
-	int lastAction;
+	int m_lastAction;
 private:
 	vector<int> m_states;
 	vector<string> m_createdLabels;
 	vector<Token> m_tokens;
-	vector<string> createdIfExpressionsLabels;
-	stack<string> whileLabels;
+	vector<string> m_createdIfExpressionsLabels;
+	stack<string> m_whileLabels;
+	string m_exprType;
 
 	VariablesTable *m_variablesTable;
 
-	void processProduction(Production *production);
+	void ProcessProduction(Production *production);
+	void ChangeExprType(string newType);
 	void Shift(Action action, Token token);
 	bool Reduce(Action action);
-	void computeProduction(Production *production);
+	void ComputeProduction(Production *production);
 	
-	void parseExpression(vector<string> stack);
+	void ParseExpression(vector<string> stack);
 
 	void Accept();
 	void HandleError(Token token);
 
-	Symbol symbolWithIndex(int index);
+	Symbol SymbolWithIndex(int index);
 	Generator *generator;
 };

@@ -8,6 +8,10 @@
 
 int main(int argc, char * argv[])
 {
+	bool a;
+	a = true - true;
+	cout << a << endl;
+
 	char *inputFileName = "input.txt";
 	
 	Generator generator;
@@ -16,18 +20,18 @@ int main(int argc, char * argv[])
 	Lexer lexer(inputFileName, *parser.m_symbolsTable);
 	while (lexer.nextTokenExists()) {
 		Token token = lexer.nextToken();
-		parser.getNextToken(token);
+		parser.GetNextToken(token);
 
-		while (parser.lastAction == 2) {
-			parser.getNextToken(token);
+		while (parser.m_lastAction == 2) {
+			parser.GetNextToken(token);
 		}
 	}
 
-	Token lastToken = parser.createTokenEOF();
-	parser.getNextToken(lastToken);
+	Token lastToken = parser.CreateTokenEOF();
+	parser.GetNextToken(lastToken);
 
-	while (parser.lastAction != 4) {
-		parser.getNextToken(lastToken);
+	while (parser.m_lastAction != 4) {
+		parser.GetNextToken(lastToken);
 	}
 
 	generator.MakeASM("input.asm");
