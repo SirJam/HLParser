@@ -5,6 +5,7 @@
 #include "Variable.h"
 #include "Token.h"
 #include <algorithm>
+#include "Sender.h"
 
 
 using namespace std;
@@ -20,7 +21,7 @@ private:
 
 	Token *m_tempToken;
 public:
-	VariablesTable();
+	VariablesTable(Sender *sender);
 	~VariablesTable();
 
 	bool TryToRegisterVariable(vector<Token> stack);
@@ -35,5 +36,6 @@ public:
 	vector<string> GetExpressionStack(vector<Token> stack, bool isAssignment);
 
 	vector<Variable> *m_variablesTable;
+	Sender *sender;
 };
 

@@ -12,13 +12,14 @@
 #include <vector>
 #include <string.h>
 #include <iostream>
+#include "Sender.h"
 
 using namespace std;
 
 class Parser
 {
 public:
-	Parser(Generator *generator);	
+	Parser(Generator *generator, Sender *sender);	
 
 	void GetNextToken(Token const& token);
 	Token CreateTokenEOF();
@@ -51,4 +52,5 @@ private:
 
 	Symbol SymbolWithIndex(int index);
 	Generator *generator;
+	Sender *sender;
 };

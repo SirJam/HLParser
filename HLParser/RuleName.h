@@ -15,14 +15,6 @@ public:
 	{
 		return "nonTerminal";
 	}
-	static const string EOF_RULE()
-	{
-		return "EOF";
-	}
-	static const string ERROR()
-	{
-		return "Error";
-	}
 	static const string WHITESPACE()
 	{
 		return "Whitespace";
@@ -30,6 +22,14 @@ public:
 	static const string DIGITS()
 	{
 		return "digits";
+	}
+	static const string EOF_RULE()
+	{
+		return "EOF";
+	}
+	static const string ERROR_MSG()
+	{
+		return "Error";
 	}
 
 

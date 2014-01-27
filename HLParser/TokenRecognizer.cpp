@@ -11,7 +11,7 @@ Symbol TokenRecognizer::TokenTypeByTokensValue(string const& lexeme)
 {
 	for (Symbol symbol : symbols) 
 	{
-		if (lexeme == symbol.m_term && symbol.m_type == 1 && lexeme != RuleName::EOF_RULE() && lexeme != RuleName::ERROR()
+		if (lexeme == symbol.m_term && symbol.m_type == 1 && lexeme != RuleName::EOF_RULE() && lexeme != RuleName::ERROR_MSG()
 			&& lexeme != RuleName::WHITESPACE() && lexeme != RuleName::IDENTIFIER() && lexeme != RuleName::DIGITS()) 
 		{
 			return symbol;
@@ -21,7 +21,7 @@ Symbol TokenRecognizer::TokenTypeByTokensValue(string const& lexeme)
 	if (isNumber(lexeme)) return TokenTypeByTokenName(RuleName::DIGITS());
 	if (isId(lexeme)) return TokenTypeByTokenName(RuleName::IDENTIFIER());
 
-	return TokenTypeByTokenName(RuleName::ERROR());
+	return TokenTypeByTokenName(RuleName::ERROR_MSG());
 }
 
 Symbol TokenRecognizer::TokenTypeByTokenName(string const& name)

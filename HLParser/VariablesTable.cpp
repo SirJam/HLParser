@@ -7,7 +7,8 @@
 #include "ReservedWords.h"
 #include <stack>
 
-VariablesTable::VariablesTable()
+VariablesTable::VariablesTable(Sender *sender)
+:sender(sender)
 {
 	m_variablesTable = new vector<Variable>;
 }

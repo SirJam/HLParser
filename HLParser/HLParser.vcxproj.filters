@@ -38,6 +38,7 @@
     <ClInclude Include="TypeChecker.h" />
     <ClInclude Include="ReservedWords.h" />
     <ClInclude Include="FunctionsTable.h" />
+    <ClInclude Include="Sender.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="GoldGrammarTables.xml" />

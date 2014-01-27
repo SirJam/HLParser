@@ -3,9 +3,11 @@
 #include "Symbol.h"
 #include "ErrorHandler.h"
 #include "TablesReader.h"
+#include "Sender.h"
 
-Parser::Parser(Generator *generator)
+Parser::Parser(Generator *generator, Sender *sender)
 :generator(generator),
+sender(sender),
 m_exprType("none")
 {
 	TablesReader *tablesReader = new TablesReader();
@@ -16,7 +18,7 @@ m_exprType("none")
 	
 	tablesReader->~TablesReader();
 
-	m_variablesTable = new VariablesTable();
+	m_variablesTable = new VariablesTable(sender);
 
 	m_states.push_back(0);
 	m_tokens.push_back(CreateTokenEOF());
@@ -381,5 +383,6 @@ void Parser::HandleError(Token token)
 			expectedValues += "'\n";
 		}
 	}
+	//sender->SendMessageWithDescription(token.line, "Hey!");
 	ErrorHandler::FailedWithTokenError(expectedValues, token.lexeme, token.line);
 }
