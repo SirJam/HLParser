@@ -7,37 +7,37 @@ using namespace std;
 class ErrorHandler
 {
 public:
-	static void FailedWithTypeError(string type, int line)
+	static string FailedWithTypeError(string type)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Type '" + type + "' is not allowed!\n");
+		return "Type '" + type + "' is not allowed!\n";
 	}
-	static void FailedWithRedefinition(string name, int line)
+	static string FailedWithRedefinition(string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Redefinition of variable '" + name + "'!\n");
+		return "Redefinition of variable '" + name + "'!\n";
 	}
-	static void FailedWithReservedWord(string name, int line)
+	static string FailedWithReservedWord(string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Name '" + name + "' is not allowed because it is reserved word!\n");
+		return "Name '" + name + "' is not allowed because it is reserved word!\n";
 	}
-	static void FailedWithNotExistingVariable(string name, int line)
+	static string FailedWithNotExistingVariable(string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Variable '" + name + "' has not been declared!\n");
+		return "Variable '" + name + "' has not been declared!\n";
 	}
-	static void FailedWithNotAssignableArrayExpression(string name, int line)
+	static string FailedWithNotAssignableArrayExpression(string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "'" + name + "' array can only assign it an array of similar type and size!\n");
+		return "'" + name + "' array can only assign it an array of similar type and size!\n";
 	}
-	static void FailedWithNotAssignableIntBoolExpression(string name, int line)
+	static string FailedWithNotAssignableIntBoolExpression(string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "'" + name + "' variable can only be assigned to variable of similar type and size!\n");
+		return "'" + name + "' variable can only be assigned to variable of similar type and size!\n";
 	}
-	static void FailedWithTokenError(string expectedValues, string name, int line)
+	static string FailedWithTokenError(string expectedValues, string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "\n  --==Syntax error==--\n\n" + "Expected tokens: \n\n" + expectedValues + "\nReceived token: '" + name + "'!\n");
+		return "\n  --==Syntax error==--\n\nExpected tokens: \n\n" + expectedValues + "\nReceived token: '" + name + "'!\n";
 	}
-	static void FailedWithMaxLengthOfNumber(string name, int line)
+	static string FailedWithMaxLengthOfNumber(string name)
 	{
-		ShowErrorLineAndMessageAndExit(ErrorAtLine(line) + "Value of number '" + name + "' is more than 999.999.999\n");
+		return "Value of number '" + name + "' is more than 999.999.999\n";
 	}
 
 	static void ShowErrorLineAndMessageAndExit(string str)

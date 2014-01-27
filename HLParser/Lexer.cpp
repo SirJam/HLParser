@@ -2,8 +2,10 @@
 #include "Lexer.h"
 #include "ErrorHandler.h"
 
-Lexer::Lexer(const char *fileName, vector<Symbol> const& symbolTable)
-:tokenRecognizer(symbolTable) {
+Lexer::Lexer(const char *fileName, vector<Symbol> const& symbolTable, Sender *sender)
+:tokenRecognizer(symbolTable),
+sender(sender)
+{
 	char ch;
 	char ch1;
 	bool mulcom = false;
@@ -148,7 +150,8 @@ void Lexer::CheckNumberOnLength(string const &str)
 
 		if (isNumber && str.size() > 9) 
 		{
-			ErrorHandler::FailedWithMaxLengthOfNumber(str, line);
+			string message = ErrorHandler::FailedWithMaxLengthOfNumber(str);
+			sender->SendMessageWithDescription(line, message, true);
 		}
 	}
 }

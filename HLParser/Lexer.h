@@ -5,11 +5,12 @@
 #include "Symbol.h"
 #include <iostream>
 #include <fstream>
+#include "Sender.h"
 
 class Lexer
 {
 public:
-	Lexer(const char *fileName, vector<Symbol> const& symbolTable);
+	Lexer(const char *fileName, vector<Symbol> const& symbolTable, Sender *sender);
 
 	Token nextToken();
 	bool nextTokenExists();
@@ -20,6 +21,7 @@ private:
 	int lexemeBegin;
 	int forward;
 	int line;
+	Sender *sender;
 
 	string GetNextWord();
 

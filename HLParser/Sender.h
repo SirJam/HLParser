@@ -1,29 +1,68 @@
 #pragma once
+#pragma comment(lib, "ws2_32.lib")
 
-#include <sstream>
-#include <iostream>
-#include <windows.h>
-#include <stdlib.h> 
+#include <stdio.h>
 #include <string.h>
-#include <time.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <socketapi.h>
+#include <sstream>
+#include <WinSock2.h>
+#include <windows.h>
 
 using namespace std;
+
+#define PORT 3000
+#define SERVERADDR "127.0.0.1"
 
 class Sender
 {
 private:
-	LPCWSTR const pipeName()
-	{
-		return L"\\\\.\\pipe\\god_c_creator_pipe";
-	}
-	HANDLE hPipe;
-
+	SOCKET *m_sock;
 public:
 	Sender()
 	{
+		// Пример простого TCPклиента
+		char buff[1024];
+		printf("TCP DEMO CLIENT\n");
+		// Шаг 1  инициализация библиотеки Winsock
+		if (WSAStartup(0x202, (WSADATA *) &buff[0]))
+		{
+			printf("WSAStart error %d\n", WSAGetLastError());
+			return;
+		}
+		// Шаг 2  создание сокета
+		m_sock = new SOCKET(socket(AF_INET, SOCK_STREAM, 0));
+			//socket(AF_INET, SOCK_STREAM, 0);
+		if (!m_sock)
+		{
+			printf("Socket() error %d\n", WSAGetLastError());
+			return;
+		}
+		// Шаг 3  установка соединения
+		// заполнение структуры sockaddr_in – указание адреса и порта сервера
+		sockaddr_in dest_addr;
+		dest_addr.sin_family = AF_INET;
+		dest_addr.sin_port = htons(PORT);
+		HOSTENT *hst;
+		// преобразование IP адреса из символьного в сетевой формат
+		if (inet_addr(SERVERADDR) != INADDR_NONE)
+			dest_addr.sin_addr.s_addr = inet_addr(SERVERADDR);
+		else
+		{
+			printf("Invalid address %s\n", SERVERADDR);
+			closesocket(*m_sock);
+			WSACleanup();
+			return;
+		}
+		// адрес сервера получен – пытаемся установить соединение
+		if (connect(*m_sock, (sockaddr *) &dest_addr, sizeof(dest_addr)))
+		{
+			printf("Connect error %d\n", WSAGetLastError());
+			return;
+		}
+	}
+	~Sender()
+	{
+		closesocket(*m_sock);
+		WSACleanup();
 	}
 
 	struct Message
@@ -31,31 +70,24 @@ public:
 		int line;
 		string message;
 	};
-	
-	void SendMessageWithDescription(int line, string message)
+
+	void SendMessageWithDescription(int line, string message, bool isError)
 	{
-		int sockfd;
-
-		struct addrinfo *servinfo, *p;
-		int rv;
-		int numbytes;
-		char* hostname = "localhost";
-		char* server = "localhost";
-	/*	Message msg;
-		msg.line = line;
-		msg.message = message;
-
-		hPipe = CreateFile(pipeName(), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-		DWORD bytes = 0;
-		if (hPipe == INVALID_HANDLE_VALUE) {
-			cout << "There is no pipe channel!" << endl;
+		// Шаг 4  чтение и передача сообщений
+		char buff[1024];		
+		ostringstream str;
+		if (isError) {
+			str << "Error at line: " << line << endl;
 		}
+		str << message << endl;
 
-		WriteFile(hPipe, (LPVOID) &message, sizeof(message), &bytes, NULL);
-
-
-		// Flush the buffer
-		FlushFileBuffers(hPipe);*/
+		for (int i = 0; i < str.str().size(); i++) {
+			buff[i] = str.str().at(i);
+		}
+		// передаем строку клиента серверу
+		send(*m_sock, &buff[0], sizeof(char) * str.str().size(), 0);
+		if (isError) {
+			exit(EXIT_FAILURE);
+		}
 	}
 };

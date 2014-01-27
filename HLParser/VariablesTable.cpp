@@ -76,7 +76,8 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 
 	if (!TypeChecker::IsAllowedType(type))
 	{
-		ErrorHandler::FailedWithTypeError(type, typeToken.line);
+		string message = ErrorHandler::FailedWithTypeError(type);
+		sender->SendMessageWithDescription(typeToken.line, message, true);
 	}
 
 	Token *identifiersDefinition = &stack.at(stack.size() - 2);
@@ -98,7 +99,8 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 
 		if (ReservedWords::IsReservedWord(idToken->lexeme))
 		{
-			ErrorHandler::FailedWithReservedWord(idToken->lexeme, idToken->line);
+			string message = ErrorHandler::FailedWithReservedWord(idToken->lexeme);
+			sender->SendMessageWithDescription(idToken->line, message, true);
 		}
 
 		if (m_variablesTable->size())
@@ -107,7 +109,8 @@ bool VariablesTable::TryToRegisterVariable(vector<Token> stack)
 			{
 				if (var.m_name == idToken->lexeme)
 				{
-					ErrorHandler::FailedWithRedefinition(idToken->lexeme, idToken->line);
+					string message = ErrorHandler::FailedWithRedefinition(idToken->lexeme);
+					sender->SendMessageWithDescription(idToken->line, message, true);
 				}
 			}
 		}
@@ -148,7 +151,11 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 		}
 	}
 
-	if (!isVarExist) ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.m_term, idToken.line);
+	if (!isVarExist) 
+	{
+		string message = ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.m_term);
+		sender->SendMessageWithDescription(idToken.line, message, true);
+	}
 
 	if (expressionAndSymbolToken.lexeme != RuleName::EXPRESSION_AND_SYMBOL()) {
 
@@ -324,7 +331,8 @@ vector<string> VariablesTable::GetExpressionStack(vector<Token> stack, bool isAs
 		{
 			if (currToken->symbol.m_term == RuleName::IDENTIFIER() && !DoesVariableExists(currToken->lexeme))
 			{
-				ErrorHandler::FailedWithNotExistingVariable(currToken->lexeme, currToken->line);
+				string message = ErrorHandler::FailedWithNotExistingVariable(currToken->lexeme);
+				sender->SendMessageWithDescription(currToken->line, message, true);
 			}
 			expressionStack.push_back(currToken->lexeme);
 			if (nextTokens.size())
@@ -387,7 +395,8 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 		{
 			if (!IsAssignableIntBoolExpression(rightPart, leftPart))
 			{
-				ErrorHandler::FailedWithNotAssignableIntBoolExpression(leftPart->lexeme, leftPart->line);
+				string message = ErrorHandler::FailedWithNotAssignableIntBoolExpression(leftPart->lexeme);
+				sender->SendMessageWithDescription(leftPart->line, message, true);
 			}
 		}
 		else
@@ -396,7 +405,8 @@ void VariablesTable::CompareTypes(vector<Token> stack, vector<string> rightPart)
 			{
 				if (!IsAssignableArrayExpression(rightPart, leftPart))
 				{
-					ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->lexeme, leftPart->line);
+					string message = ErrorHandler::FailedWithNotAssignableArrayExpression(leftPart->lexeme);
+					sender->SendMessageWithDescription(leftPart->line, message, true);
 				}
 			}
 		}

@@ -378,11 +378,11 @@ void Parser::HandleError(Token token)
 	string expectedValues;
 	for (Action action : *m_actionsTable) {
 		if (action.stateIndex == m_states.back()) {
-			expectedValues += "    '";
+			expectedValues += "'";
 			expectedValues += SymbolWithIndex(action.symbolIndex).m_term;
-			expectedValues += "'\n";
+			expectedValues += "', ";
 		}
 	}
-	//sender->SendMessageWithDescription(token.line, "Hey!");
-	ErrorHandler::FailedWithTokenError(expectedValues, token.lexeme, token.line);
+	string message = ErrorHandler::FailedWithTokenError(expectedValues, token.lexeme);
+	sender->SendMessageWithDescription(token.line, message, true);
 }

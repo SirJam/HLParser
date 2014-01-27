@@ -15,7 +15,8 @@ int main(int argc, char * argv[])
 	Generator generator;
 	Parser parser(&generator, sender);	
 
-	Lexer lexer(inputFileName, *parser.m_symbolsTable);
+	Lexer lexer(inputFileName, *parser.m_symbolsTable, sender);
+	sender->SendMessageWithDescription(0, "Scanning characters completed!", false);
 	while (lexer.nextTokenExists()) {
 		Token token = lexer.nextToken();
 		parser.GetNextToken(token);
@@ -31,6 +32,7 @@ int main(int argc, char * argv[])
 	while (parser.m_lastAction != 4) {
 		parser.GetNextToken(lastToken);
 	}
+	sender->SendMessageWithDescription(0, "Parsing completed!", false);
 
 	string name = inputFileName;
 	name += ".asm";
@@ -40,6 +42,8 @@ int main(int argc, char * argv[])
 	paramStream << "GoAsm.exe ";
 	paramStream << name;
 	system(paramStream.str().c_str());
+
+	sender->SendMessageWithDescription(0, "'" + name + "'" + "has been maked succesfully!", false);
 	
 	name = inputFileName;
 	name += ".obj";
@@ -49,6 +53,9 @@ int main(int argc, char * argv[])
 	paramStream1 << name;
 	paramStream1 << " kernel32.dll";
 	system(paramStream1.str().c_str());
+
+	sender->SendMessageWithDescription(0, "'" + name + "'" + "has been maked succesfully!", false);
+	sender->SendMessageWithDescription(0, "Running application...", false);
 
 	return 0;
 }
