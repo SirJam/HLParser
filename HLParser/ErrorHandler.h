@@ -33,7 +33,7 @@ public:
 	}
 	static string FailedWithTokenError(string expectedValues, string name)
 	{
-		return "\n  --==Syntax error==--\n\nExpected tokens: \n\n" + expectedValues + "\nReceived token: '" + name + "'!\n";
+		return "\n  --==Syntax error==--\n\nExpected tokens: \n\n" + expectedValues + "\n\nReceived token: '" + name + "'!\n";
 	}
 	static string FailedWithMaxLengthOfNumber(string name)
 	{
