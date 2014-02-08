@@ -153,7 +153,7 @@ void VariablesTable::CheckExistingOfVariable(vector<Token> stack, bool isNotElem
 
 	if (!isVarExist) 
 	{
-		string message = ErrorHandler::FailedWithNotExistingVariable(idToken.symbol.m_term);
+		string message = ErrorHandler::FailedWithNotExistingVariable(idToken.lexeme);
 		sender->SendMessageWithDescription(idToken.line, message, true);
 	}
 
